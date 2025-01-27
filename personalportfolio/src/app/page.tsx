@@ -1,6 +1,4 @@
 import Image from "next/image";
-import { FaLinkedin, FaGithub, FaInstagram, FaEnvelope } from "react-icons/fa";
-import ThemeToggle from "@/components/ThemeToggle";
 import { getAllPosts } from '@/lib/mdx';
 import BlogPost from '@/components/BlogPost';
 import PortfolioItem from '@/components/PortfolioItem';
@@ -45,18 +43,20 @@ export default async function Home() {
           <div className="max-w-4xl mx-auto px-4">
             <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">About Me</h2>
             <div className="flex flex-col md:flex-row items-center mb-12">
-              <div className="relative w-48 h-48 mb-6 md:mb-0 md:mr-8">
+              <div className="relative w-48 h-64 mb-6 md:mb-0 md:mr-8 flex-shrink-0">
                 <Image
                   src="/images/personal.jpg"
                   alt="Leo Zhang"
-                  fill
-                  className="rounded-full object-cover"
+                  layout="fill"
+                  objectFit="cover"
+                  className="rounded-full"
                 />
               </div>
-              <div>
+              <div className="flex-1">
                 <p className="text-lg text-gray-700 dark:text-gray-300">
                   Hi everyone! I'm Leo, a computer engineering student at the University of British Columbia! 
                   This is a portfolio of all the random stuff I decide to do and some of my projects!
+                  FYI, this page is still under construction if you'd like to see old projects visit leozhang.cool.
                 </p>
               </div>
             </div>
@@ -126,7 +126,7 @@ export default async function Home() {
         {/* Contact Section */}
         <section id="contact" className="py-20 bg-white dark:bg-gray-900">
           <div className="max-w-4xl mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-8 text-gray-900 dark:text-white text-center">Feel free to reach out!</h2>
+            <h2 className="text-4xl font-bold mb-8 text-gray-900 dark:text-white text-center">If you wanna say hi!</h2>
             <SocialIcons />
           </div>
         </section>

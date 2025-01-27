@@ -2,6 +2,13 @@ import { getPostBySlug, getAllPosts } from '@/lib/mdx'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import { formatDate } from '@/lib/utils'
 import Link from 'next/link'
+import { notFound } from 'next/navigation'
+
+type Props = {
+  params: {
+    slug: string;
+  };
+};
 
 export async function generateStaticParams() {
   const posts = await getAllPosts()
@@ -10,8 +17,12 @@ export async function generateStaticParams() {
   }))
 }
 
-export default async function BlogPost({ params }: { params: { slug: string } }) {
+export default async function Page({ params}: Props) {
   const post = await getPostBySlug(params.slug)
+
+  if (!post) {
+    notFound()
+  }
 
   return (
     <article className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">

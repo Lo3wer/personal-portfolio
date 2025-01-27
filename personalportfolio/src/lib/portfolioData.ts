@@ -1,15 +1,6 @@
 export const portfolioItems = [
-  {
-    title: 'Project 1',
-    description: 'Description of Project 1',
-    imageUrl: '/path/to/image1.jpg', // Replace with your image path
-    link: '/portfolio/project1', // Link to the project details
-  },
-  {
-    title: 'Project 2',
-    description: 'Description of Project 2',
-    imageUrl: '/path/to/image2.jpg', // Replace with your image path
-    link: '/portfolio/project2', // Link to the project details
-  },
-  // Add more projects as needed
-]; 
+    { title: "Project 1", description: "Description 1", imageUrl: "/images/project1.jpg", link: "/project1", category: "Mechanical" },
+    { title: "Project 2", description: "Description 2", imageUrl: "/images/project2.jpg", link: "/project2", category: "Electrical" },
+    { title: "Project 3", description: "Description 3", imageUrl: "/images/project3.jpg", link: "/project3", category: "Software" },
+    // Add more items with categories
+  ];
