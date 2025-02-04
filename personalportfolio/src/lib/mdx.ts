@@ -4,6 +4,14 @@ import matter from 'gray-matter'
 
 const postsDirectory = path.join(process.cwd(), 'src', 'posts')
 
+type Post = {
+  slug: string;
+  title: string;
+  date: string;
+  content: string;
+  description: string;
+}
+
 export async function getAllPosts() {
   const files = fs.readdirSync(postsDirectory)
 
@@ -21,20 +29,35 @@ export async function getAllPosts() {
         description: data.description,
       }
     })
-    .sort((a, b) => (new Date(b.date) as any) - (new Date(a.date) as any))
+    .sort((a, b) => {
+      const dateA = new Date(a.date);
+      const dateB = new Date(b.date);
+      return dateB.getTime() - dateA.getTime();
+    })
 
   return posts
 }
 
-export async function getPostBySlug(slug: string) {
-  const filePath = path.join(postsDirectory, `${slug}.mdx`)
-  const fileContents = fs.readFileSync(filePath, 'utf8')
-  const { data, content } = matter(fileContents)
+export async function getPostBySlug(slug: string): Promise<Post | undefined> {
+  try {
+    const filePath = path.join(postsDirectory, `${slug}.mdx`)
+    
+    if (!fs.existsSync(filePath)) {
+      return undefined;
+    }
+    
+    const fileContents = fs.readFileSync(filePath, 'utf8')
+    const { data, content } = matter(fileContents)
 
-  return {
-    slug,
-    title: data.title,
-    date: data.date,
-    content,
+    return {
+      slug,
+      title: data.title,
+      date: data.date,
+      content: content,
+      description: data.description,
+    }
+  } catch (error) {
+    console.error('Error reading post:', error);
+    return undefined;
   }
 } 

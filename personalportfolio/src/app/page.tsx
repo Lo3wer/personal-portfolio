@@ -5,6 +5,7 @@ import PortfolioItem from '@/components/PortfolioItem';
 import { portfolioItems } from '@/lib/portfolioData';
 import { experienceItems } from '@/lib/experienceData';
 import SocialIcons from '@/components/SocialIcons';
+import '../styles/mdx.css';
 
 export default async function Home() {
   const posts = await getAllPosts();
@@ -54,9 +55,9 @@ export default async function Home() {
               </div>
               <div className="flex-1">
                 <p className="text-lg text-gray-700 dark:text-gray-300">
-                  Hi everyone! I'm Leo, a computer engineering student at the University of British Columbia! 
+                  I&apos;m Leo, a computer engineering student at the University of British Columbia! 
                   This is a portfolio of all the random stuff I decide to do and some of my projects!
-                  FYI, this page is still under construction if you'd like to see old projects visit leozhang.cool.
+                  FYI, this page is still under construction if you&apos;d like to see old projects visit leozhang.cool.
                 </p>
               </div>
             </div>
@@ -99,6 +100,8 @@ export default async function Home() {
                   description={item.description} 
                   imageUrl={item.imageUrl} 
                   link={item.link} 
+                  date={item.date}
+                  category={item.category}
                 />
               ))}
             </div>

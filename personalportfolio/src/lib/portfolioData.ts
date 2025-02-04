@@ -1,6 +1,26 @@
 export const portfolioItems = [
-    { title: "Project 1", description: "Description 1", imageUrl: "/images/project1.jpg", link: "/project1", category: "Mechanical" },
-    { title: "Project 2", description: "Description 2", imageUrl: "/images/project2.jpg", link: "/project2", category: "Electrical" },
-    { title: "Project 3", description: "Description 3", imageUrl: "/images/project3.jpg", link: "/project3", category: "Software" },
+    { 
+      title: "NewsMapper", 
+      description: "A way to view past and present events on an interactive map. NWHacks 2025", 
+      imageUrl: "/images/newsmapper.png", 
+      link: "https://devpost.com/software/news-mapper", 
+      category: "Software", 
+      date: "January 2025" 
+    },
+    { 
+      title: "Pantry Patrol", 
+      description: "Track expiry dates and get recipe suggestions. CPEN221A Group Project", 
+      imageUrl: "/images/pantry_patrol_otherpage.png", 
+      link: "https://github.com/Lo3wer/CPEN221-Pantry-Patrol.git", 
+      category: "Software", 
+      date: "December 2024" 
+    },
+    { title: "Verilog RISC Processor", 
+      description: "16-bit RISC processor on DE1-SOC FPGA. CPEN211 Lab", 
+      imageUrl: "/images/de1soc.jpg", 
+      link: "/project3", 
+      category: "Hardware", 
+      date: "January 2024" 
+    },
     // Add more items with categories
   ];
