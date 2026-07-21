@@ -1,5 +1,22 @@
 export const portfolioItems = [
     { 
+      title: "Lox Treewalk Interpreter", 
+      description: "Jlox inspired treewalk interpreter implemented in Rust without external libraries", 
+      imageUrl: "/images/crafting-interpreters.png", 
+      link: "https://github.com/Lo3wer/jlox-treewalk-interpreter-rust", 
+      category: "Software", 
+      date: "July 2026"
+    },
+    
+    { 
+      title: "Chip-8 Emulator", 
+      description: "IBM Chip-8 emulator written using C, and displayed with SDL", 
+      imageUrl: "/images/chip-8_ibm_logo.png", 
+      link: "https://github.com/Lo3wer/chip-8", 
+      category: "Software", 
+      date: "December 2025" 
+    },
+    { 
       title: "NewsMapper", 
       description: "A way to view past and present events on an interactive map. NWHacks 2025", 
       imageUrl: "/images/newsmapper.png", 
@@ -22,5 +39,4 @@ export const portfolioItems = [
       category: "Hardware", 
       date: "January 2024" 
     },
-    // Add more items with categories
   ];
