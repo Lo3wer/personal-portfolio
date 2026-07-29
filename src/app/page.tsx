@@ -47,7 +47,7 @@ export default async function Home() {
             <div className="flex flex-col md:flex-row items-center mb-12">
               <div className="relative w-48 h-64 mb-6 md:mb-0 md:mr-8 flex-shrink-0">
                 <Image
-                  src="/images/personal.jpg"
+                  src="/images/personal.jpeg"
                   alt="Leo Zhang"
                   layout="fill"
                   objectFit="cover"
@@ -58,7 +58,6 @@ export default async function Home() {
                 <p className="text-lg text-gray-700 dark:text-gray-300">
                   I&apos;m Leo, a computer engineering student at the University of British Columbia! 
                   This is a portfolio of all the random stuff I decide to do and some of my projects!
-                  FYI, this page is still under construction if you&apos;d like to see old projects visit leozhang.cool.
                 </p>
               </div>
             </div>
