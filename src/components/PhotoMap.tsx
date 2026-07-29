@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import type { MapPhoto } from '@/lib/photoMapData'
 import type { Map as LeafletMap, TileLayer, Marker } from 'leaflet'
 import PhotoDetailModal from './PhotoDetailModal'
@@ -11,6 +12,7 @@ type Props = {
 
 const LIGHT_TILES = 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
 const DARK_TILES = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
+const WORLD_BOUNDS: [[number, number], [number, number]] = [[-85, -180], [85, 180]]
 
 function markerHtml(src: string): string {
   return `<div style="width:48px;height:48px;border-radius:50%;overflow:hidden;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);cursor:pointer;background:#e5e7eb;"><img src="${src}" alt="" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'"/></div>`
@@ -37,17 +39,25 @@ export default function PhotoMap({ photos }: Props) {
       L = mod
 
       const isDark = document.documentElement.classList.contains('dark')
-      const bounds = L.latLngBounds(photos.map((p) => [p.lat, p.lng] as [number, number]))
+      const containerWidth = mapRef.current!.clientWidth
+      const tileSize = 256
+      const minZoom = Math.max(1, Math.floor(Math.log2(containerWidth / tileSize)))
 
       map = L.map(mapRef.current!, {
         zoomControl: false,
         attributionControl: false,
-      }).fitBounds(bounds.pad(0.3))
+        center: [20, 0],
+        zoom: minZoom,
+        minZoom,
+        maxBounds: WORLD_BOUNDS,
+        maxBoundsViscosity: 1,
+      })
 
       L.control.zoom({ position: 'bottomright' }).addTo(map)
 
       tileLayerRef.current = L.tileLayer(isDark ? DARK_TILES : LIGHT_TILES, {
         maxZoom: 20,
+        noWrap: true,
       }).addTo(map)
 
       photos.forEach((photo) => {
@@ -72,6 +82,7 @@ export default function PhotoMap({ photos }: Props) {
         }
         tileLayerRef.current = L.tileLayer(dark ? DARK_TILES : LIGHT_TILES, {
           maxZoom: 20,
+          noWrap: true,
         }).addTo(map)
       })
       observerRef.current.observe(document.documentElement, {
@@ -97,18 +108,25 @@ export default function PhotoMap({ photos }: Props) {
     }
   }, [photos])
 
+  useEffect(() => {
+    if (!selectedPhoto && mapInstanceRef.current) {
+      requestAnimationFrame(() => mapInstanceRef.current?.invalidateSize())
+    }
+  }, [selectedPhoto])
+
   return (
     <>
       <div
         ref={mapRef}
-        className="w-full rounded-xl overflow-hidden"
-        style={{ height: '500px' }}
+        className="w-full rounded-xl overflow-hidden isolate"
+        style={{ height: '70vh', minHeight: '400px' }}
       />
-      {selectedPhoto && (
+      {selectedPhoto && createPortal(
         <PhotoDetailModal
           photo={selectedPhoto}
           onClose={() => setSelectedPhoto(null)}
-        />
+        />,
+        document.body
       )}
     </>
   )
