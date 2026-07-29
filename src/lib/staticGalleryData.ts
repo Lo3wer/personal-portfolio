@@ -161,7 +161,7 @@ export const staticGalleryData: MapPhoto[] = [
     thumb: '/thumbnails/IMG_2529.JPG',
     src: '/images/static_gallery/IMG_2529.JPG',
     timestamp: '2022-08-27',
-    comment: 'test',
+    comment: '',
     location: 'Whistler Resort Municipality, British Columbia, Canada',
   },
   {
