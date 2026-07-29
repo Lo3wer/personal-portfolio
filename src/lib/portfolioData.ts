@@ -28,7 +28,7 @@ export const portfolioItems = [
       title: "Pantry Patrol", 
       description: "Track expiry dates and get recipe suggestions. CPEN221A Group Project", 
       imageUrl: "/images/pantry_patrol_otherpage.png", 
-      link: "https://github.com/Lo3wer/CPEN221-Pantry-Patrol.git", 
+      link: "https://github.com/u759/PantryPatrol", 
       category: "Software", 
       date: "December 2024" 
     },
