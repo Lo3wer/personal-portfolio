@@ -1,7 +1,10 @@
-import { readdirSync, readFileSync, renameSync, statSync, writeFileSync } from 'fs'
+import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, statSync, writeFileSync } from 'fs'
 import { join, parse, extname } from 'path'
 import exifr from 'exifr'
+import sharp from 'sharp'
 
+const THUMB_DIR = 'public/thumbnails'
+const THUMB_SIZE = 64
 const DELAY_MS = 1100
 
 function sleep(ms) {
@@ -37,6 +40,20 @@ async function reverseGeocode(lat, lng) {
   }
 
   return [city, region, country].filter(Boolean).join(', ')
+}
+
+function ensureThumbDir() {
+  if (!existsSync(THUMB_DIR)) mkdirSync(THUMB_DIR, { recursive: true })
+}
+
+async function generateThumbnail(srcPath, thumbPath) {
+  if (existsSync(thumbPath)) return
+  try {
+    await sharp(srcPath).rotate().resize(THUMB_SIZE, THUMB_SIZE, { fit: 'cover' }).toFile(thumbPath)
+    console.log(`  thumbnail generated: ${basename(thumbPath)}`)
+  } catch (e) {
+    console.log(`  thumbnail failed: ${e.message}`)
+  }
 }
 
 const IMAGE_EXTS = new Set(['.jpg', '.jpeg', '.png', '.heic', '.HEIC', '.JPG', '.JPEG', '.PNG'])
@@ -80,6 +97,7 @@ ${entries.join('\n')}
 }
 
 async function processDirectory(dir, srcPrefix, outputFile, varName, existingMap, skipGeocode, moveNoGpsTo) {
+  ensureThumbDir()
   const files = readdirSync(dir)
     .filter(f => IMAGE_EXTS.has(extname(f)))
     .sort()
@@ -95,9 +113,16 @@ async function processDirectory(dir, srcPrefix, outputFile, varName, existingMap
   for (const file of files) {
     const filePath = join(dir, file)
     const id = parse(file).name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+    const thumbPath = join(THUMB_DIR, file)
+    const thumbUrl = `/thumbnails/${file}`
+    await generateThumbnail(filePath, thumbPath)
 
     if (existingMap && existingMap[id]) {
       let entry = existingMap[id]
+
+      if (!entry.includes('thumb:')) {
+        entry = entry.replace(/^\s+src:/m, `    thumb: '${thumbUrl}',\n    src:`)
+      }
 
       const latM = entry.match(/lat:\s*([^,\s]+)/)
       const lngM = entry.match(/lng:\s*([^,\s]+)/)
@@ -163,6 +188,7 @@ async function processDirectory(dir, srcPrefix, outputFile, varName, existingMap
     lat: ${latStr},
     lng: ${lngStr},
     src: '${srcPrefix}/${file}',
+    thumb: '${thumbUrl}',
     timestamp: '${timestamp}',
     comment: '',
     location: '${location}',
