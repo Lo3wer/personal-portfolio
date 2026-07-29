@@ -1,15 +1,13 @@
 import Image from "next/image";
-import { getAllPosts } from '@/lib/blogData';
-import BlogPost from '@/components/BlogPost';
 import PortfolioItem from '@/components/PortfolioItem';
+import PhotoMap from '@/components/PhotoMap';
+import { photoMapData } from '@/lib/photoMapData';
 import { portfolioItems } from '@/lib/portfolioData';
 import { experienceItems } from '@/lib/experienceData';
 import SocialIcons from '@/components/SocialIcons';
 import ThemeToggle from '@/components/ThemeToggle';
 
 export default async function Home() {
-  const posts = getAllPosts();
-
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
       {/* Navigation */}
@@ -21,7 +19,7 @@ export default async function Home() {
               <li><a href="#home" className="hover:text-gray-600 dark:hover:text-gray-300">Home</a></li>
               <li><a href="#about" className="hover:text-gray-600 dark:hover:text-gray-300">About</a></li>
               <li><a href="#portfolio" className="hover:text-gray-600 dark:hover:text-gray-300">Portfolio</a></li>
-              <li><a href="#blog" className="hover:text-gray-600 dark:hover:text-gray-300">Blog</a></li>
+              <li><a href="#photos" className="hover:text-gray-600 dark:hover:text-gray-300">Photos</a></li>
               <li><a href="#contact" className="hover:text-gray-600 dark:hover:text-gray-300">Contact</a></li>
             </ul>
             <div className="w-10"></div>
@@ -108,15 +106,11 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Blog Section */}
-        <section id="blog" className="py-20 bg-gray-50 dark:bg-gray-800">
-          <div className="max-w-4xl mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Blog</h2>
-            <div className="space-y-8">
-              {posts.map((post) => (
-                <BlogPost key={post.slug} post={post} />
-              ))}
-            </div>
+        {/* Photos Section */}
+        <section id="photos" className="py-20 bg-gray-50 dark:bg-gray-800">
+          <div className="max-w-6xl mx-auto px-4">
+            <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Photos</h2>
+            <PhotoMap photos={photoMapData} />
           </div>
         </section>
 

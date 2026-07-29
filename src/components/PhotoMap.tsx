@@ -1,0 +1,115 @@
+'use client'
+
+import { useEffect, useRef, useState } from 'react'
+import type { MapPhoto } from '@/lib/photoMapData'
+import type { Map as LeafletMap, TileLayer, Marker } from 'leaflet'
+import PhotoDetailModal from './PhotoDetailModal'
+
+type Props = {
+  photos: MapPhoto[]
+}
+
+const LIGHT_TILES = 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
+const DARK_TILES = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
+
+function markerHtml(src: string): string {
+  return `<div style="width:48px;height:48px;border-radius:50%;overflow:hidden;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);cursor:pointer;background:#e5e7eb;"><img src="${src}" alt="" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'"/></div>`
+}
+
+export default function PhotoMap({ photos }: Props) {
+  const mapRef = useRef<HTMLDivElement>(null)
+  const mapInstanceRef = useRef<LeafletMap | null>(null)
+  const tileLayerRef = useRef<TileLayer | null>(null)
+  const markersRef = useRef<Marker[]>([])
+  const observerRef = useRef<MutationObserver | null>(null)
+  const [selectedPhoto, setSelectedPhoto] = useState<MapPhoto | null>(null)
+
+  useEffect(() => {
+    if (!mapRef.current) return
+    let L: typeof import('leaflet')
+    let map: LeafletMap
+    let cancelled = false
+
+    async function init() {
+      const mod = await import('leaflet')
+      await import('leaflet/dist/leaflet.css')
+      if (cancelled) return
+      L = mod
+
+      const isDark = document.documentElement.classList.contains('dark')
+      const bounds = L.latLngBounds(photos.map((p) => [p.lat, p.lng] as [number, number]))
+
+      map = L.map(mapRef.current!, {
+        zoomControl: false,
+        attributionControl: false,
+      }).fitBounds(bounds.pad(0.3))
+
+      L.control.zoom({ position: 'bottomright' }).addTo(map)
+
+      tileLayerRef.current = L.tileLayer(isDark ? DARK_TILES : LIGHT_TILES, {
+        maxZoom: 20,
+      }).addTo(map)
+
+      photos.forEach((photo) => {
+        const icon = L.divIcon({
+          className: '',
+          html: markerHtml(photo.src),
+          iconSize: [48, 48],
+          iconAnchor: [24, 24],
+        })
+
+        const marker = L.marker([photo.lat, photo.lng], { icon }).addTo(map)
+        marker.on('click', () => setSelectedPhoto(photo))
+        markersRef.current.push(marker)
+      })
+
+      mapInstanceRef.current = map
+
+      observerRef.current = new MutationObserver(() => {
+        const dark = document.documentElement.classList.contains('dark')
+        if (tileLayerRef.current) {
+          map.removeLayer(tileLayerRef.current)
+        }
+        tileLayerRef.current = L.tileLayer(dark ? DARK_TILES : LIGHT_TILES, {
+          maxZoom: 20,
+        }).addTo(map)
+      })
+      observerRef.current.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ['class'],
+      })
+    }
+
+    init()
+
+    return () => {
+      cancelled = true
+      if (observerRef.current) {
+        observerRef.current.disconnect()
+        observerRef.current = null
+      }
+      if (mapInstanceRef.current) {
+        mapInstanceRef.current.remove()
+        mapInstanceRef.current = null
+      }
+      markersRef.current = []
+      tileLayerRef.current = null
+    }
+  }, [photos])
+
+  return (
+    <>
+      <div
+        ref={mapRef}
+        className="w-full rounded-xl overflow-hidden"
+        style={{ height: '500px' }}
+      />
+      {selectedPhoto && (
+        <PhotoDetailModal
+          photo={selectedPhoto}
+          onClose={() => setSelectedPhoto(null)}
+        />
+      )}
+    </>
+  )
+}
