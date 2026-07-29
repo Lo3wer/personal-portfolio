@@ -10,7 +10,7 @@ export const galleryData: MapPhoto[] = [
     lng: 106.7013,
     src: '/images/gallery/personal.jpeg',
     timestamp: '2026-02-01',
-    comment: '',
-    location: 'Thủ Đức',
+    comment: 'test',
+    location: 'Thủ Đức, Thành phố Hồ Chí Minh, Việt Nam',
   },
 ]

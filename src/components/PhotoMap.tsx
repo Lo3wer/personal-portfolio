@@ -25,6 +25,7 @@ export default function PhotoMap({ photos }: Props) {
   const markersRef = useRef<Marker[]>([])
   const observerRef = useRef<MutationObserver | null>(null)
   const [selectedPhoto, setSelectedPhoto] = useState<MapPhoto | null>(null)
+  const visiblePhotos = photos.filter(p => p.lat !== null && p.lng !== null && p.location)
 
   useEffect(() => {
     if (!mapRef.current) return
@@ -60,7 +61,7 @@ export default function PhotoMap({ photos }: Props) {
         noWrap: true,
       }).addTo(map)
 
-      photos.forEach((photo) => {
+      visiblePhotos.forEach((photo) => {
         const icon = L.divIcon({
           className: '',
           html: markerHtml(photo.src),
@@ -68,7 +69,7 @@ export default function PhotoMap({ photos }: Props) {
           iconAnchor: [24, 24],
         })
 
-        const marker = L.marker([photo.lat, photo.lng], { icon }).addTo(map)
+        const marker = L.marker([photo.lat!, photo.lng!], { icon }).addTo(map)
         marker.on('click', () => setSelectedPhoto(photo))
         markersRef.current.push(marker)
       })

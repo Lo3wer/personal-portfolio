@@ -1,8 +1,8 @@
 import Image from "next/image";
 import PortfolioItem from '@/components/PortfolioItem';
 import PhotoMap from '@/components/PhotoMap';
-import { photoMapData } from '@/lib/photoMapData';
 import { galleryData } from '@/lib/galleryData';
+import { staticGalleryData } from '@/lib/staticGalleryData';
 import { portfolioItems } from '@/lib/portfolioData';
 import { experienceItems } from '@/lib/experienceData';
 import SocialIcons from '@/components/SocialIcons';
@@ -112,7 +112,7 @@ export default async function Home() {
         <section id="photos" className="py-20 bg-gray-50 dark:bg-gray-800">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Gallery</h2>
-            <PhotoMap photos={[...photoMapData, ...galleryData]} />
+            <PhotoMap photos={[...galleryData, ...staticGalleryData]} />
           </div>
         </section>
 
