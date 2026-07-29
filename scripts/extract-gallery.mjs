@@ -1,5 +1,5 @@
-import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, statSync, writeFileSync } from 'fs'
-import { join, parse, extname } from 'path'
+import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, statSync, writeFileSync } from 'fs'
+import { join, parse, extname, basename } from 'path'
 import exifr from 'exifr'
 import sharp from 'sharp'
 
@@ -46,8 +46,15 @@ function ensureThumbDir() {
   if (!existsSync(THUMB_DIR)) mkdirSync(THUMB_DIR, { recursive: true })
 }
 
+function cleanThumbDir() {
+  if (existsSync(THUMB_DIR)) {
+    for (const f of readdirSync(THUMB_DIR)) {
+      rmSync(join(THUMB_DIR, f))
+    }
+  }
+}
+
 async function generateThumbnail(srcPath, thumbPath) {
-  if (existsSync(thumbPath)) return
   try {
     await sharp(srcPath).rotate().resize(THUMB_SIZE, THUMB_SIZE, { fit: 'cover' }).toFile(thumbPath)
     console.log(`  thumbnail generated: ${basename(thumbPath)}`)
@@ -201,6 +208,9 @@ async function processDirectory(dir, srcPrefix, outputFile, varName, existingMap
 }
 
 async function main() {
+  cleanThumbDir()
+  ensureThumbDir()
+
   // Process gallery/ (preserve existing entries, move GPS-less images to static_gallery/)
   console.log('=== Gallery ===')
   const galleryExisting = loadExistingEntries('src/lib/galleryData.ts')
