@@ -19,7 +19,7 @@ export default async function Home() {
               <li><a href="#home" className="hover:text-gray-600 dark:hover:text-gray-300">Home</a></li>
               <li><a href="#about" className="hover:text-gray-600 dark:hover:text-gray-300">About</a></li>
               <li><a href="#portfolio" className="hover:text-gray-600 dark:hover:text-gray-300">Portfolio</a></li>
-              <li><a href="#photos" className="hover:text-gray-600 dark:hover:text-gray-300">Photos</a></li>
+              <li><a href="#photos" className="hover:text-gray-600 dark:hover:text-gray-300">Gallery</a></li>
               <li><a href="#contact" className="hover:text-gray-600 dark:hover:text-gray-300">Contact</a></li>
             </ul>
             <div className="w-10"></div>
@@ -30,11 +30,12 @@ export default async function Home() {
       {/* Main Content */}
       <main className="pt-16">
         {/* Hero Section */}
-        <section id="home" className="min-h-screen flex items-center justify-center bg-white dark:bg-gray-900">
-          <div className="text-center">
-            <h1 className="text-5xl font-bold mb-4 text-gray-900 dark:text-white">Leo Zhang</h1>
-            <p className="text-xl text-gray-600 dark:text-gray-300">Welcome to my portfolio!</p>
-            <SocialIcons />
+        <section id="home" className="min-h-screen flex items-center justify-center relative bg-[url('/images/background.JPG')] bg-cover bg-center bg-no-repeat">
+          <div className="absolute inset-0 bg-black/40"></div>
+          <div className="text-center relative z-10">
+            <h1 className="text-5xl font-bold mb-4 text-white">Leo Zhang</h1>
+            <p className="text-xl text-gray-200">Welcome to my portfolio!</p>
+            <SocialIcons light />
           </div>
         </section>
 
@@ -109,7 +110,7 @@ export default async function Home() {
         {/* Photos Section */}
         <section id="photos" className="py-20 bg-gray-50 dark:bg-gray-800">
           <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Photos</h2>
+            <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Gallery</h2>
             <PhotoMap photos={photoMapData} />
           </div>
         </section>

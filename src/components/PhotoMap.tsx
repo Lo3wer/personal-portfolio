@@ -12,7 +12,7 @@ type Props = {
 
 const LIGHT_TILES = 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
 const DARK_TILES = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
-const WORLD_BOUNDS: [[number, number], [number, number]] = [[-85, -180], [85, 180]]
+const WORLD_BOUNDS: [[number, number], [number, number]] = [[-60, -180], [85, 180]]
 
 function markerHtml(src: string): string {
   return `<div style="width:48px;height:48px;border-radius:50%;overflow:hidden;border:2px solid white;box-shadow:0 2px 8px rgba(0,0,0,0.3);cursor:pointer;background:#e5e7eb;"><img src="${src}" alt="" style="width:100%;height:100%;object-fit:cover;" onerror="this.style.display='none'"/></div>`
@@ -118,7 +118,7 @@ export default function PhotoMap({ photos }: Props) {
     <>
       <div
         ref={mapRef}
-        className="w-full rounded-xl overflow-hidden isolate"
+        className="w-full rounded-xl overflow-hidden isolate bg-[#f2efe9] dark:bg-[#222]"
         style={{ height: '70vh', minHeight: '400px' }}
       />
       {selectedPhoto && createPortal(
