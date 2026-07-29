@@ -1,4 +1,4 @@
-import { readdirSync, readFileSync, statSync, writeFileSync } from 'fs'
+import { readdirSync, readFileSync, renameSync, statSync, writeFileSync } from 'fs'
 import { join, parse, extname } from 'path'
 import exifr from 'exifr'
 
@@ -9,7 +9,7 @@ function sleep(ms) {
 }
 
 async function reverseGeocode(lat, lng) {
-  const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&zoom=10`
+  const url = `https://nominatim.openstreetmap.org/reverse?lat=${lat}&lon=${lng}&format=json&zoom=10&accept-language=en`
   const res = await fetch(url, {
     headers: { 'User-Agent': 'personal-portfolio/1.0' },
   })
@@ -79,7 +79,7 @@ ${entries.join('\n')}
   console.log(`\nWritten to ${filePath} (${entries.length} photos)`)
 }
 
-async function processDirectory(dir, srcPrefix, outputFile, varName, existingMap, skipGeocode) {
+async function processDirectory(dir, srcPrefix, outputFile, varName, existingMap, skipGeocode, moveNoGpsTo) {
   const files = readdirSync(dir)
     .filter(f => IMAGE_EXTS.has(extname(f)))
     .sort()
@@ -136,6 +136,13 @@ async function processDirectory(dir, srcPrefix, outputFile, varName, existingMap
       timestamp = stats.birthtime.toISOString().split('T')[0]
     }
 
+    if (lat === null && moveNoGpsTo) {
+      const dest = join(moveNoGpsTo, file)
+      renameSync(filePath, dest)
+      console.log(`  ${file} → moved to static_gallery/`)
+      continue
+    }
+
     const latStr = lat !== null ? lat.toFixed(4) : 'null'
     const lngStr = lng !== null ? lng.toFixed(4) : 'null'
 
@@ -168,12 +175,12 @@ async function processDirectory(dir, srcPrefix, outputFile, varName, existingMap
 }
 
 async function main() {
-  // Process gallery/ (preserve existing entries)
+  // Process gallery/ (preserve existing entries, move GPS-less images to static_gallery/)
   console.log('=== Gallery ===')
   const galleryExisting = loadExistingEntries('src/lib/galleryData.ts')
-  await processDirectory(GALLERY_DIR, '/images/gallery', 'src/lib/galleryData.ts', 'galleryData', galleryExisting)
+  await processDirectory(GALLERY_DIR, '/images/gallery', 'src/lib/galleryData.ts', 'galleryData', galleryExisting, false, STATIC_GALLERY_DIR)
 
-  // Process static_gallery/ (preserve existing entries)
+  // Process static_gallery/ (preserve existing entries, no auto-geocode)
   console.log('\n=== Static Gallery ===')
   const staticExisting = loadExistingEntries('src/lib/staticGalleryData.ts')
   await processDirectory(STATIC_GALLERY_DIR, '/images/static_gallery', 'src/lib/staticGalleryData.ts', 'staticGalleryData', staticExisting, true)

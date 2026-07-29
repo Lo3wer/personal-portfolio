@@ -10,7 +10,7 @@ type Props = {
   photos: MapPhoto[]
 }
 
-const LIGHT_TILES = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png'
+const LIGHT_TILES = 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
 const DARK_TILES = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
 const WORLD_BOUNDS: [[number, number], [number, number]] = [[-60, -180], [85, 180]]
 
