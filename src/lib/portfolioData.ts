@@ -1,6 +1,6 @@
 export const portfolioItems = [
     { 
-      title: "Lox Treewalk Interpreter", 
+      title: "Rust Lox Treewalk Interpreter", 
       description: "Jlox inspired treewalk interpreter implemented in Rust without external libraries", 
       imageUrl: "/images/crafting-interpreters.png", 
       link: "https://github.com/Lo3wer/jlox-treewalk-interpreter-rust", 

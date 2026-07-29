@@ -5,6 +5,7 @@ export type MapPhoto = {
   src: string
   timestamp: string
   comment: string
+  location: string
 }
 
 export const photoMapData: MapPhoto[] = [
@@ -14,7 +15,8 @@ export const photoMapData: MapPhoto[] = [
     lng: -123.1207,
     src: '/images/rocket.jpg',
     timestamp: '2026-07-21',
-    comment: 'My first photo post! Just testing things out.',
+    comment: 'sdf',
+    location: 'Vancouver, BC',
   },
   {
     id: 'montypython',
@@ -23,6 +25,7 @@ export const photoMapData: MapPhoto[] = [
     src: '/images/montypython.png',
     timestamp: '2024-08-29',
     comment: 'Monty Python - MATH 302 course review',
+    location: 'Vancouver, BC',
   },
   {
     id: 'monkeysaddle',
@@ -31,6 +34,7 @@ export const photoMapData: MapPhoto[] = [
     src: '/images/monkeysaddle.png',
     timestamp: '2024-06-29',
     comment: 'Monkey saddle - MATH 253 multivariable calculus',
+    location: 'Vancouver, BC',
   },
   {
     id: 'personal',
@@ -39,6 +43,7 @@ export const photoMapData: MapPhoto[] = [
     src: '/images/personal.jpeg',
     timestamp: '2024',
     comment: 'Leo Zhang - Computer Engineering student at UBC',
+    location: 'Burnaby, BC',
   },
   {
     id: 'crafting-interpreters',
@@ -47,6 +52,7 @@ export const photoMapData: MapPhoto[] = [
     src: '/images/crafting-interpreters.png',
     timestamp: '2024-06-01',
     comment: 'Lox Treewalk Interpreter project',
+    location: 'Vancouver, BC',
   },
   {
     id: 'chip8',
@@ -55,6 +61,7 @@ export const photoMapData: MapPhoto[] = [
     src: '/images/chip-8_ibm_logo.png',
     timestamp: '2024',
     comment: 'Chip-8 Emulator project',
+    location: 'Vancouver, BC',
   },
   {
     id: 'newsmapper',
@@ -63,5 +70,6 @@ export const photoMapData: MapPhoto[] = [
     src: '/images/newsmapper.png',
     timestamp: '2024',
     comment: 'NewsMapper - interactive map of events',
+    location: 'Vancouver, BC',
   },
 ]

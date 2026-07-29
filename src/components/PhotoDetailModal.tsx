@@ -38,6 +38,7 @@ export default function PhotoDetailModal({ photo, onClose }: Props) {
         </div>
         <div className="p-6 space-y-2">
           <p className="text-sm text-gray-500 dark:text-gray-400">{photo.timestamp}</p>
+          <p className="text-sm text-gray-500 dark:text-gray-400">{photo.location}</p>
           <p className="text-gray-700 dark:text-gray-300">{photo.comment}</p>
         </div>
       </div>
