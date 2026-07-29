@@ -97,8 +97,23 @@ async function processDirectory(dir, srcPrefix, outputFile, varName, existingMap
     const id = parse(file).name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
 
     if (existingMap && existingMap[id]) {
-      entries.push(existingMap[id])
-      console.log(`  ${file} → preserved existing entry`)
+      let entry = existingMap[id]
+
+      const latM = entry.match(/lat:\s*([^,\s]+)/)
+      const lngM = entry.match(/lng:\s*([^,\s]+)/)
+      const locM = entry.match(/location:\s*'([^']*)'/)
+      const el = parseFloat(latM?.[1]), nl = parseFloat(lngM?.[1])
+
+      if (!isNaN(el) && !isNaN(nl) && locM && !locM[1]) {
+        const name = (await reverseGeocode(el, nl)).replace(/'/g, "\\'")
+        entry = entry.replace(/location:\s*'[^']*'/, `location: '${name}'`)
+        console.log(`  ${file} → geocoded location: ${name}`)
+        await sleep(DELAY_MS)
+      } else {
+        console.log(`  ${file} → preserved existing entry`)
+      }
+
+      entries.push(entry)
       continue
     }
 
