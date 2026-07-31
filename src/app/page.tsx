@@ -19,7 +19,7 @@ export default async function Home() {
             <ul className="flex space-x-8 justify-center flex-grow">
               <li><a href="#home" className="hover:text-gray-600 dark:hover:text-gray-300">Home</a></li>
               <li><a href="#about" className="hover:text-gray-600 dark:hover:text-gray-300">About</a></li>
-              <li><a href="#portfolio" className="hover:text-gray-600 dark:hover:text-gray-300">Portfolio</a></li>
+              <li><a href="#projects" className="hover:text-gray-600 dark:hover:text-gray-300">Projects</a></li>
               <li><a href="#photos" className="hover:text-gray-600 dark:hover:text-gray-300">Gallery</a></li>
               <li><a href="#contact" className="hover:text-gray-600 dark:hover:text-gray-300">Contact</a></li>
             </ul>
@@ -35,7 +35,7 @@ export default async function Home() {
           <div className="absolute inset-0 bg-black/40"></div>
           <div className="text-center relative z-10">
             <h1 className="text-5xl font-bold mb-4 text-white">Leo Zhang</h1>
-            <p className="text-xl text-gray-200">Welcome to my portfolio!</p>
+            <p className="text-xl text-gray-200">Welcome to my website!</p>
             <SocialIcons light />
           </div>
         </section>
@@ -57,7 +57,6 @@ export default async function Home() {
               <div className="flex-1">
                 <p className="text-lg text-gray-700 dark:text-gray-300">
                   I&apos;m Leo, a computer engineering student at the University of British Columbia! 
-                  This is a portfolio of all the random stuff I decide to do and some of my projects!
                 </p>
               </div>
             </div>
@@ -88,10 +87,10 @@ export default async function Home() {
           </div>
         </section>
 
-        {/* Portfolio Section */}
-        <section id="portfolio" className="py-20 bg-white dark:bg-gray-900">
+        {/* Projects Section */}
+        <section id="projects" className="py-20 bg-white dark:bg-gray-900">
           <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Portfolio</h2>
+            <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Projects</h2>
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
               {portfolioItems.map((item, index) => (
                 <PortfolioItem 
