@@ -1,16 +1,31 @@
 export const portfolioItems = [
+    {
+      title: "Art Theives",
+      description: "React Native application developed using Expo with an Express.js backend",
+      imageUrl: "/images/projects/art_thieves.png", 
+      link: "https://github.com/Lo3wer/art-thieves", 
+      category: "Software", 
+      date: "August 2026" 
+    },
     { 
-      title: "Rust Lox Treewalk Interpreter", 
-      description: "Jlox inspired treewalk interpreter implemented in Rust without external libraries", 
+      title: "Lox Interpreters Rust", 
+      description: "Treewalk interpreter and bytecode virtual machine written in Rust", 
       imageUrl: "/images/projects/crafting-interpreters.png", 
       link: "https://github.com/Lo3wer/lox-interpreters-rust", 
       category: "Software", 
       date: "July 2026"
     },
-    
+    {
+      title: "Tiny Renderer",
+      description: "Graphics rasterizer written in C++",
+      imageUrl: "/images/projects/rasterizer.png",
+      link: "https://github.com/Lo3wer/TinyRendererClass",
+      category: "Software",
+      date: "January 2026"
+    },
     { 
       title: "Chip-8 Emulator", 
-      description: "IBM Chip-8 emulator written using C, and displayed with SDL", 
+      description: "IBM Chip-8 emulator written in C, and displayed with SDL", 
       imageUrl: "/images/projects/chip-8_ibm_logo.png", 
       link: "https://github.com/Lo3wer/chip-8", 
       category: "Software", 
@@ -18,7 +33,7 @@ export const portfolioItems = [
     },
     { 
       title: "NewsMapper", 
-      description: "A way to view past and present events on an interactive map. NWHacks 2025", 
+      description: "Next.js website with Springboot backend. NWHacks 2025", 
       imageUrl: "/images/projects/newsmapper.png", 
       link: "https://devpost.com/software/news-mapper", 
       category: "Software", 
@@ -26,17 +41,17 @@ export const portfolioItems = [
     },
     { 
       title: "Pantry Patrol", 
-      description: "Track expiry dates and get recipe suggestions. CPEN221A Group Project", 
+      description: "Java Swing application with Springboot backend. CPEN221A Group Project", 
       imageUrl: "/images/projects/pantry_patrol_otherpage.png", 
       link: "https://github.com/u759/PantryPatrol", 
       category: "Software", 
       date: "December 2024" 
     },
     { title: "Verilog RISC Processor", 
-      description: "16-bit RISC processor on DE1-SOC FPGA. CPEN211 Lab", 
+      description: "16-bit RISC processor on DE1-SOC FPGA written in System Verilog. CPEN211 Lab", 
       imageUrl: "/images/projects/de1soc.jpg", 
       link: "https://github.com/Lo3wer/cpen211-risc-cpu", 
       category: "Hardware", 
-      date: "January 2024" 
+      date: "December 2024" 
     },
   ];

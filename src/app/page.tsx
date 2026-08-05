@@ -6,27 +6,12 @@ import { staticGalleryData } from '@/lib/staticGalleryData';
 import { portfolioItems } from '@/lib/portfolioData';
 import { experienceItems } from '@/lib/experienceData';
 import SocialIcons from '@/components/SocialIcons';
-import ThemeToggle from '@/components/ThemeToggle';
+import Navbar from '@/components/Navbar';
 
 export default async function Home() {
   return (
     <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
-      {/* Navigation */}
-      <header className="fixed top-0 left-0 right-0 bg-white/80 dark:bg-black/80 backdrop-blur-sm z-50">
-        <nav className="max-w-6xl mx-auto px-4 py-4">
-          <div className="flex justify-between items-center">
-            <ThemeToggle />
-            <ul className="flex space-x-8 justify-center flex-grow">
-              <li><a href="#home" className="hover:text-gray-600 dark:hover:text-gray-300">Home</a></li>
-              <li><a href="#about" className="hover:text-gray-600 dark:hover:text-gray-300">About</a></li>
-              <li><a href="#projects" className="hover:text-gray-600 dark:hover:text-gray-300">Projects</a></li>
-              <li><a href="#photos" className="hover:text-gray-600 dark:hover:text-gray-300">Gallery</a></li>
-              <li><a href="#contact" className="hover:text-gray-600 dark:hover:text-gray-300">Contact</a></li>
-            </ul>
-            <div className="w-10"></div>
-          </div>
-        </nav>
-      </header>
+      <Navbar />
 
       {/* Main Content */}
       <main className="pt-16">
