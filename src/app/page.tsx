@@ -76,18 +76,21 @@ export default async function Home() {
         <section id="projects" className="py-20 bg-white dark:bg-gray-900">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Projects</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {portfolioItems.map((item, index) => (
-                <PortfolioItem 
-                  key={index} 
-                  title={item.title} 
-                  description={item.description} 
-                  imageUrl={item.imageUrl} 
-                  link={item.link} 
-                  date={item.date}
-                  category={item.category}
-                />
-              ))}
+            <div className="relative max-h-[70vh] overflow-y-auto scroll-area pr-2">
+              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                {portfolioItems.map((item, index) => (
+                  <PortfolioItem 
+                    key={index} 
+                    title={item.title} 
+                    description={item.description} 
+                    imageUrl={item.imageUrl} 
+                    link={item.link} 
+                    date={item.date}
+                    category={item.category}
+                  />
+                ))}
+              </div>
+              <div className="pointer-events-none sticky bottom-0 h-8 bg-gradient-to-t from-white dark:from-gray-900 to-transparent"></div>
             </div>
           </div>
         </section>
