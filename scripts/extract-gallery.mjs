@@ -2,6 +2,8 @@ import { existsSync, mkdirSync, readdirSync, readFileSync, renameSync, rmSync, s
 import { join, parse, extname, basename } from 'path'
 import exifr from 'exifr'
 import sharp from 'sharp'
+import heicConvert from 'heic-convert'
+import piexif from 'piexifjs'
 
 const THUMB_DIR = 'public/thumbnails'
 const THUMB_SIZE = 64
@@ -54,6 +56,43 @@ function cleanThumbDir() {
   }
 }
 
+function dms(v) {
+  const d = Math.floor(v)
+  const mf = (v - d) * 60
+  const m = Math.floor(mf)
+  const s = Math.round((mf - m) * 60)
+  return [[d, 1], [m, 1], [s, 1]]
+}
+
+function toExifDate(date) {
+  const pad = n => String(n).padStart(2, '0')
+  return `${date.getFullYear()}:${pad(date.getMonth() + 1)}:${pad(date.getDate())} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(date.getSeconds())}`
+}
+
+function rotateForOrientation(orientation) {
+  switch (orientation) {
+    case 3: return 180
+    case 6: return 90
+    case 8: return 270
+    default: return 0
+  }
+}
+
+function embedExif(jpegBuffer, { date, lat, lng }) {
+  const zeroth = { [piexif.ImageIFD.ExifTag]: 0x8769 }
+  const exif = {}
+  if (date) exif[piexif.ExifIFD.DateTimeOriginal] = toExifDate(date)
+  const gps = lat !== null && lng !== null ? {
+    [piexif.GPSIFD.GPSVersionID]: [2, 2, 0, 0],
+    [piexif.GPSIFD.GPSLatitudeRef]: lat >= 0 ? 'N' : 'S',
+    [piexif.GPSIFD.GPSLatitude]: dms(Math.abs(lat)),
+    [piexif.GPSIFD.GPSLongitudeRef]: lng >= 0 ? 'E' : 'W',
+    [piexif.GPSIFD.GPSLongitude]: dms(Math.abs(lng)),
+  } : {}
+  const bytes = piexif.dump({ '0th': zeroth, 'Exif': exif, 'GPS': gps })
+  return Buffer.from(piexif.insert(bytes, jpegBuffer.toString('binary')), 'binary')
+}
+
 async function convertHeicToJpg(filePath) {
   const ext = extname(filePath)
   if (!HEIC_EXTS.has(ext)) return null
@@ -63,9 +102,27 @@ async function convertHeicToJpg(filePath) {
     console.log(`  ${basename(filePath)} → original removed (JPG already exists)`)
     return jpgPath
   }
-  await sharp(filePath).rotate().toFormat('jpeg').jpeg({ quality: 92 }).toFile(jpgPath)
+
+  const original = readFileSync(filePath)
+  const exif = await exifr.parse(original, { gps: true, pick: ['DateTimeOriginal', 'latitude', 'longitude', 'Orientation'] })
+  const meta = await sharp(original).metadata()
+  const orientation = meta.orientation || 1
+
+  let jpeg = Buffer.from(await heicConvert({ buffer: original, format: 'JPEG', quality: 0.92 }))
+
+  if (rotateForOrientation(orientation) !== 0) {
+    jpeg = await sharp(jpeg).rotate(rotateForOrientation(orientation)).toBuffer()
+  }
+
+  jpeg = embedExif(jpeg, {
+    date: exif?.DateTimeOriginal ?? null,
+    lat: exif?.latitude ?? null,
+    lng: exif?.longitude ?? null,
+  })
+
+  writeFileSync(jpgPath, jpeg)
   rmSync(filePath)
-  console.log(`  ${basename(filePath)} → converted to JPG`)
+  console.log(`  ${basename(filePath)} → converted to JPG (orientation ${orientation})`)
   return jpgPath
 }
 
@@ -145,6 +202,18 @@ async function processDirectory(dir, srcPrefix, outputFile, varName, existingMap
 
     if (existingMap && existingMap[id]) {
       let entry = existingMap[id]
+
+      const existingSrc = entry.match(/src:\s*'([^']*)'/)?.[1] ?? ''
+      const existingThumb = entry.match(/thumb:\s*'([^']*)'/)?.[1] ?? ''
+
+      if (existingSrc && extname(existingSrc) !== extname(processedFile)) {
+        entry = entry.replace(/src:\s*'([^']*)'/, `src: '${srcPrefix}/${processedFile}'`)
+        console.log(`  ${file} → updated src to ${processedFile}`)
+      }
+
+      if (existingThumb && extname(existingThumb) !== extname(processedFile)) {
+        entry = entry.replace(/thumb:\s*'([^']*)'/, `thumb: '${thumbUrl}'`)
+      }
 
       if (!entry.includes('thumb:')) {
         entry = entry.replace(/^\s+src:/m, `    thumb: '${thumbUrl}',\n    src:`)
