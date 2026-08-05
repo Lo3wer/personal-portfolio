@@ -1,8 +1,8 @@
 export enum ProjectCategory {
   Software = 'Software',
   Hardware = 'Hardware',
-  Electrical = 'Electrical',
-  Random = 'Random',
+  // Electrical = 'Electrical',
+  // Random = 'Random',
 }
 
 export const portfolioItems: {
