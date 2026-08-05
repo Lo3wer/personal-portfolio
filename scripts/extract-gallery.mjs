@@ -54,6 +54,21 @@ function cleanThumbDir() {
   }
 }
 
+async function convertHeicToJpg(filePath) {
+  const ext = extname(filePath)
+  if (!HEIC_EXTS.has(ext)) return null
+  const jpgPath = filePath.slice(0, -ext.length) + '.jpg'
+  if (existsSync(jpgPath)) {
+    rmSync(filePath)
+    console.log(`  ${basename(filePath)} → original removed (JPG already exists)`)
+    return jpgPath
+  }
+  await sharp(filePath).rotate().toFormat('jpeg').jpeg({ quality: 92 }).toFile(jpgPath)
+  rmSync(filePath)
+  console.log(`  ${basename(filePath)} → converted to JPG`)
+  return jpgPath
+}
+
 async function generateThumbnail(srcPath, thumbPath) {
   try {
     await sharp(srcPath).rotate().resize(THUMB_SIZE, THUMB_SIZE, { fit: 'cover' }).toFile(thumbPath)
@@ -63,7 +78,8 @@ async function generateThumbnail(srcPath, thumbPath) {
   }
 }
 
-const IMAGE_EXTS = new Set(['.jpg', '.jpeg', '.png', '.heic', '.HEIC', '.JPG', '.JPEG', '.PNG'])
+const IMAGE_EXTS = new Set(['.jpg', '.jpeg', '.png', '.heic', '.HEIC', '.heif', '.HEIF', '.JPG', '.JPEG', '.PNG'])
+const HEIC_EXTS = new Set(['.heic', '.HEIC', '.heif', '.HEIF'])
 const GALLERY_DIR = 'public/images/gallery'
 const STATIC_GALLERY_DIR = 'public/images/static_gallery'
 
@@ -119,10 +135,13 @@ async function processDirectory(dir, srcPrefix, outputFile, varName, existingMap
 
   for (const file of files) {
     const filePath = join(dir, file)
-    const id = parse(file).name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
-    const thumbPath = join(THUMB_DIR, file)
-    const thumbUrl = `/thumbnails/${file}`
-    await generateThumbnail(filePath, thumbPath)
+    const convertedPath = await convertHeicToJpg(filePath)
+    const processedFile = convertedPath ? basename(convertedPath) : file
+    const processedPath = convertedPath || filePath
+    const id = parse(processedFile).name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/^-|-$/g, '')
+    const thumbPath = join(THUMB_DIR, processedFile)
+    const thumbUrl = `/thumbnails/${processedFile}`
+    await generateThumbnail(processedPath, thumbPath)
 
     if (existingMap && existingMap[id]) {
       let entry = existingMap[id]
@@ -139,39 +158,39 @@ async function processDirectory(dir, srcPrefix, outputFile, varName, existingMap
       if (!isNaN(el) && !isNaN(nl) && locM && !locM[1]) {
         const name = (await reverseGeocode(el, nl)).replace(/'/g, "\\'")
         entry = entry.replace(/location:\s*'[^']*'/, `location: '${name}'`)
-        console.log(`  ${file} → geocoded location: ${name}`)
+        console.log(`  ${processedFile} → geocoded location: ${name}`)
         await sleep(DELAY_MS)
       } else {
-        console.log(`  ${file} → preserved existing entry`)
+        console.log(`  ${processedFile} → preserved existing entry`)
       }
 
       entries.push(entry)
       continue
     }
 
-    const stats = statSync(filePath)
+    const stats = statSync(processedPath)
 
     let lat = null
     let lng = null
 
     let timestamp
     try {
-      const exif = await exifr.parse(filePath, { gps: true })
+      const exif = await exifr.parse(processedPath, { gps: true })
       timestamp = exif?.DateTimeOriginal
         ? new Date(exif.DateTimeOriginal).toISOString().split('T')[0]
         : stats.birthtime.toISOString().split('T')[0]
       lat = exif?.latitude ?? null
       lng = exif?.longitude ?? null
-      if (lat === null) console.log(`  ${file} → no GPS data`)
+      if (lat === null) console.log(`  ${processedFile} → no GPS data`)
     } catch (e) {
-      console.log(`  ${file} → error: ${e.message}`)
+      console.log(`  ${processedFile} → error: ${e.message}`)
       timestamp = stats.birthtime.toISOString().split('T')[0]
     }
 
     if (lat === null && moveNoGpsTo) {
-      const dest = join(moveNoGpsTo, file)
-      renameSync(filePath, dest)
-      console.log(`  ${file} → moved to static_gallery/`)
+      const dest = join(moveNoGpsTo, processedFile)
+      renameSync(processedPath, dest)
+      console.log(`  ${processedFile} → moved to static_gallery/`)
       continue
     }
 
@@ -183,10 +202,10 @@ async function processDirectory(dir, srcPrefix, outputFile, varName, existingMap
     if (!skipGeocode && lat !== null && lng !== null) {
       try {
         location = (await reverseGeocode(lat, lng)).replace(/'/g, "\\'")
-        console.log(`  ${file} → ${location}`)
+        console.log(`  ${processedFile} → ${location}`)
         await sleep(DELAY_MS)
       } catch {
-        console.log(`  ${file} → geocode failed`)
+        console.log(`  ${processedFile} → geocode failed`)
       }
     }
 
@@ -194,7 +213,7 @@ async function processDirectory(dir, srcPrefix, outputFile, varName, existingMap
     id: '${id}',
     lat: ${latStr},
     lng: ${lngStr},
-    src: '${srcPrefix}/${file}',
+    src: '${srcPrefix}/${processedFile}',
     thumb: '${thumbUrl}',
     timestamp: '${timestamp}',
     comment: '',

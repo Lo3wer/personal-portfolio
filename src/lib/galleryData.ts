@@ -55,16 +55,6 @@ export const galleryData: MapPhoto[] = [
     location: 'Đồng Tháp Province, Vietnam',
   },
   {
-    id: 'img-5547',
-    lat: 43.6530,
-    lng: -79.3864,
-    thumb: '/thumbnails/IMG_5547.JPG',
-    src: '/images/gallery/IMG_5547.JPG',
-    timestamp: '2024-05-08',
-    comment: '',
-    location: 'Toronto, Ontario, Canada',
-  },
-  {
     id: 'img-9891',
     lat: 49.3047,
     lng: -124.4228,
