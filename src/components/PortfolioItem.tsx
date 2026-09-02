@@ -15,7 +15,13 @@ export default function PortfolioItem({ title, description, imageUrl, link, date
     <div className="bg-gray-50 dark:bg-gray-800 rounded-lg shadow-lg overflow-hidden">
       <Link href={link} target="_blank" rel="noopener noreferrer">
         <div className="relative w-full h-48">
-          <Image src={imageUrl} alt={title} fill className="object-cover" />
+          <Image
+            src={imageUrl}
+            alt={title}
+            fill
+            sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
+            className="object-cover"
+          />
         </div>
         <div className="p-6">
           <h3 className="text-xl font-bold mb-2 text-gray-900 dark:text-white">{title}</h3>

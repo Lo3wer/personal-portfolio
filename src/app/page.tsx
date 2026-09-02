@@ -33,9 +33,9 @@ export default async function Home() {
                 <Image
                   src="/images/personal.jpeg"
                   alt="Leo Zhang"
-                  layout="fill"
-                  objectFit="cover"
-                  className="rounded-full"
+                  fill
+                  sizes="12rem"
+                  className="rounded-full object-cover"
                 />
               </div>
               <div className="flex-1">
