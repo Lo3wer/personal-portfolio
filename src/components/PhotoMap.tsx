@@ -10,9 +10,8 @@ type Props = {
   photos: MapPhoto[]
 }
 
-const MAPTILER_KEY = 'VQ9PkORMxSlGIjCvoJsz'
-const LIGHT_TILES = `https://api.maptiler.com/maps/basic-v2/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`
-const DARK_TILES = `https://api.maptiler.com/maps/basic-v2-dark/{z}/{x}/{y}.png?key=${MAPTILER_KEY}`
+const LIGHT_TILES = 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
+const DARK_TILES = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
 const WORLD_BOUNDS: [[number, number], [number, number]] = [[-60, -180], [85, 180]]
 
 function markerHtml(src: string): string {
