@@ -10,8 +10,9 @@ type Props = {
   photos: MapPhoto[]
 }
 
-const LIGHT_TILES = 'https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png'
-const DARK_TILES = 'https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png'
+const CARTO_KEY = 'cb1_2i6m_1_b4261dee1e58cd21cc5823d8'
+const LIGHT_TILES = `https://{s}.basemaps.cartocdn.com/light_nolabels/{z}/{x}/{y}{r}.png?key=${CARTO_KEY}`
+const DARK_TILES = `https://{s}.basemaps.cartocdn.com/dark_nolabels/{z}/{x}/{y}{r}.png?key=${CARTO_KEY}`
 const WORLD_BOUNDS: [[number, number], [number, number]] = [[-60, -180], [85, 180]]
 
 function markerHtml(src: string): string {
