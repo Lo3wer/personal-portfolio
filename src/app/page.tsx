@@ -40,7 +40,7 @@ export default async function Home() {
               </div>
               <div className="flex-1">
                 <p className="text-lg text-gray-700 dark:text-gray-300">
-                  I&apos;m Leo, a computer engineering student at the University of British Columbia! 
+                  I&apos;m Leo, a computer engineering student at the University of British Columbia! I love exploring how things work, especially computers. Some of my favourite projects were the lox interpreters and graphics renderer.
                 </p>
               </div>
             </div>
