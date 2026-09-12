@@ -8,7 +8,17 @@ export default {
     "./src/app/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
-    extend: {},
+    extend: {
+      colors: {
+        ink: {
+          DEFAULT: '#10182a',
+          panel: '#182238',
+          hover: '#232f4b',
+          border: '#2c3a5c',
+          accent: '#34507a',
+        },
+      },
+    },
   },
   plugins: [],
 } satisfies Config;

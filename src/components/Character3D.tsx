@@ -13,6 +13,7 @@ export default function Character3D({ className }: { className?: string }) {
     let animationId = 0
     let renderer: import('three').WebGLRenderer | null = null
     let resizeObserver: ResizeObserver | null = null
+    let themeObserver: MutationObserver | null = null
 
     async function init() {
       const THREE = await import('three')
@@ -47,9 +48,15 @@ export default function Character3D({ className }: { className?: string }) {
       const key = new THREE.DirectionalLight(0xffffff, 2.2)
       key.position.set(4, 6, 4)
       scene.add(key)
-      const rim = new THREE.DirectionalLight(0x8899ff, 1.4)
+      const rim = new THREE.DirectionalLight(0xffffff, 1.4)
       rim.position.set(-4, 3, -3)
       scene.add(rim)
+      const setRimForTheme = () => {
+        rim.color.setHex(document.documentElement.classList.contains('dark') ? 0x4a6b9f : 0x5eead4)
+      }
+      setRimForTheme()
+      themeObserver = new MutationObserver(setRimForTheme)
+      themeObserver.observe(document.documentElement, { attributes: true, attributeFilter: ['class'] })
       const bounce = new THREE.DirectionalLight(0xffffff, 0.7)
       bounce.position.set(0, -2, 3)
       scene.add(bounce)
@@ -143,6 +150,7 @@ export default function Character3D({ className }: { className?: string }) {
       cancelled = true
       cancelAnimationFrame(animationId)
       resizeObserver?.disconnect()
+      themeObserver?.disconnect()
       renderer?.dispose()
       if (renderer && renderer.domElement.parentNode === container) {
         container.removeChild(renderer.domElement)

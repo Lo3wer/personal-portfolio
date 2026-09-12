@@ -21,12 +21,12 @@ export default async function BlogPostPage({ params }: Props) {
   }
 
   return (
-    <article className="min-h-screen py-20 bg-gray-50 dark:bg-gray-900">
+    <article className="min-h-screen py-20 bg-teal-50 dark:bg-ink">
       <div className="max-w-4xl mx-auto px-4">
         <div className="flex justify-between items-center mb-8">
           <Link 
             href="/#blog"
-            className="inline-block text-gray-600 dark:text-gray-400 hover:text-gray-900 dark:hover:text-white transition-colors"
+            className="inline-block text-gray-600 dark:text-gray-300 hover:text-gray-900 dark:hover:text-white transition-colors"
           >
             ← Back to Home
           </Link>
@@ -49,11 +49,11 @@ function PhotoPostContent({ post }: { post: PhotoPost }) {
       {post.title && (
         <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">{post.title}</h1>
       )}
-      <time className="text-gray-500 dark:text-gray-400 block mb-6">{formatDate(post.date)}</time>
+      <time className="text-gray-600 dark:text-gray-400 block mb-6">{formatDate(post.date)}</time>
       <div className="relative w-full h-[32rem] mb-6">
         <Image src={post.image} alt={post.title ?? post.description} fill className="object-contain" />
       </div>
-      <p className="text-lg text-gray-700 dark:text-gray-300">{post.description}</p>
+      <p className="text-lg text-gray-700 dark:text-gray-200">{post.description}</p>
     </div>
   )
 }
@@ -62,7 +62,7 @@ function TextPostContent({ post }: { post: BlogPostType }) {
   return (
     <div>
       <h1 className="text-4xl font-bold mb-4 text-gray-900 dark:text-white">{post.title}</h1>
-      <time className="text-gray-500 dark:text-gray-400 block mb-8">{formatDate(post.date)}</time>
+      <time className="text-gray-600 dark:text-gray-400 block mb-8">{formatDate(post.date)}</time>
       <BlogContentRenderer blocks={post.content} />
     </div>
   )

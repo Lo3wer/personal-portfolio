@@ -120,7 +120,7 @@ export default function PhotoMap({ photos }: Props) {
     <>
       <div
         ref={mapRef}
-        className="w-full rounded-xl overflow-hidden isolate bg-[#f2efe9] dark:bg-[#222]"
+        className="w-full rounded-xl overflow-hidden isolate bg-[#f2efe9] dark:bg-[#131d31]"
         style={{ height: '70vh', minHeight: '400px' }}
       />
       {selectedPhoto && createPortal(

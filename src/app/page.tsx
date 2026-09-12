@@ -9,23 +9,23 @@ import PortfolioSection from '@/components/PortfolioSection';
 
 export default async function Home() {
   return (
-    <div className="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+    <div className="min-h-screen bg-teal-50 dark:bg-ink text-gray-900 dark:text-white">
       <Navbar />
 
       {/* Main Content */}
       <main className="pt-16">
         {/* Hero Section */}
         <section id="home" className="min-h-screen flex items-center justify-center relative bg-[url('/images/background.JPG')] bg-cover bg-center bg-no-repeat">
-          <div className="absolute inset-0 bg-black/40"></div>
+          <div className="absolute inset-0 bg-black/60"></div>
           <div className="text-center relative z-10">
             <h1 className="text-5xl font-bold mb-4 text-white">Leo Zhang</h1>
-            <p className="text-xl text-gray-200">Welcome to my website!</p>
+            <p className="text-xl text-gray-100">Welcome to my website!</p>
             <SocialIcons light />
           </div>
         </section>
 
         {/* About & Experience Section */}
-        <section id="about" className="py-20 bg-gray-50 dark:bg-gray-800">
+        <section id="about" className="py-20 bg-white dark:bg-ink-panel">
           <div className="max-w-4xl mx-auto px-4">
             <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">About Me</h2>
             <div className="flex flex-col md:flex-row items-center mb-12">
@@ -33,7 +33,7 @@ export default async function Home() {
                 <Character3D className="w-full h-full" />
               </div>
               <div className="flex-1">
-                <p className="text-lg text-gray-700 dark:text-gray-300">
+                <p className="text-lg text-gray-700 dark:text-gray-200">
                   I&apos;m Leo, a computer engineering student at the University of British Columbia! I love exploring how things work, especially computers. Some of my favourite projects were the lox interpreters and graphics renderer.
                 </p>
               </div>
@@ -44,10 +44,10 @@ export default async function Home() {
               <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Experience</h3>
               <div className="space-y-8">
                 {experienceItems.map((item, index) => (
-                  <div key={index} className="border-l-4 border-gray-300 dark:border-gray-600 pl-4 space-y-2">
+                  <div key={index} className="border-l-4 border-teal-300 dark:border-ink-border pl-4 space-y-2">
                     <div className="flex flex-col md:flex-row md:justify-between md:items-start">
                       <h3 className="text-xl font-bold text-gray-900 dark:text-white">{item.company}</h3>
-                      <span className="text-sm text-gray-500 dark:text-gray-400">{item.duration}</span>
+                      <span className="text-sm text-gray-600 dark:text-gray-400">{item.duration}</span>
                     </div>
                     <h4 className="text-lg text-gray-600 dark:text-gray-300">{item.position}</h4>
                     <ul className="list-disc list-inside text-gray-600 dark:text-gray-300">
@@ -66,7 +66,7 @@ export default async function Home() {
         </section>
 
         {/* Projects Section */}
-        <section id="projects" className="py-20 bg-white dark:bg-gray-900">
+        <section id="projects" className="py-20 bg-teal-50 dark:bg-ink">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Projects</h2>
             <PortfolioSection />
@@ -74,7 +74,7 @@ export default async function Home() {
         </section>
 
         {/* Photos Section */}
-        <section id="photos" className="py-20 bg-gray-50 dark:bg-gray-800">
+        <section id="photos" className="py-20 bg-white dark:bg-ink-panel">
           <div className="max-w-6xl mx-auto px-4">
             <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Gallery</h2>
             <PhotoMap photos={[...galleryData, ...staticGalleryData]} />
@@ -82,7 +82,7 @@ export default async function Home() {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-20 bg-white dark:bg-gray-900">
+        <section id="contact" className="py-20 bg-teal-50 dark:bg-ink">
           <div className="max-w-4xl mx-auto px-4">
             <h2 className="text-4xl font-bold mb-8 text-gray-900 dark:text-white text-center">If you wanna say hi!</h2>
             <SocialIcons />

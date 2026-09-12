@@ -16,14 +16,14 @@ export default function Navbar() {
   const [open, setOpen] = useState(false)
 
   return (
-    <header className="fixed top-0 left-0 right-0 bg-white/80 dark:bg-black/80 backdrop-blur-sm z-50">
+    <header className="fixed top-0 left-0 right-0 bg-teal-50/80 dark:bg-ink/80 backdrop-blur-sm z-50">
       <nav className="max-w-6xl mx-auto px-4 py-4">
         <div className="flex justify-between items-center">
           <ThemeToggle />
           <ul className="hidden md:flex space-x-8 justify-center flex-grow">
             {links.map(l => (
               <li key={l.href}>
-                <a href={l.href} className="hover:text-gray-600 dark:hover:text-gray-300">{l.label}</a>
+                <a href={l.href} className="hover:text-gray-700 dark:hover:text-gray-300">{l.label}</a>
               </li>
             ))}
           </ul>
@@ -32,7 +32,7 @@ export default function Navbar() {
             onClick={() => setOpen(!open)}
             aria-label="Toggle navigation menu"
             aria-expanded={open}
-            className="md:hidden p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-700 transition-colors"
+            className="md:hidden p-2 rounded-lg text-gray-700 dark:text-gray-300 hover:bg-teal-100 dark:hover:bg-ink-hover transition-colors"
           >
             {open ? <FaTimes size={20} /> : <FaBars size={20} />}
           </button>
@@ -45,7 +45,7 @@ export default function Navbar() {
                 <a
                   href={l.href}
                   onClick={() => setOpen(false)}
-                  className="block px-2 py-2 rounded-lg hover:bg-gray-100 dark:hover:bg-gray-800 hover:text-gray-600 dark:hover:text-gray-300"
+                  className="block px-2 py-2 rounded-lg hover:bg-teal-100 dark:hover:bg-ink-hover hover:text-gray-700 dark:hover:text-gray-300"
                 >
                   {l.label}
                 </a>

@@ -13,8 +13,8 @@ export default function PortfolioSection() {
   const buttonClass = (isActive: boolean) =>
     `px-4 py-1.5 rounded-full text-sm font-medium transition-colors ${
       isActive
-        ? 'bg-gray-900 text-white dark:bg-white dark:text-gray-900'
-        : 'bg-gray-200 text-gray-700 hover:bg-gray-300 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600'
+        ? 'bg-teal-200 text-teal-950 dark:bg-ink-accent dark:text-white'
+        : 'bg-gray-100 text-gray-700 hover:bg-gray-200 dark:bg-ink-hover dark:text-gray-300 dark:hover:bg-ink-panel'
     }`
 
   return (
@@ -42,9 +42,9 @@ export default function PortfolioSection() {
           ))}
         </div>
         {filtered.length === 0 && (
-          <p className="text-center text-gray-500 dark:text-gray-400 py-12">No projects in this category yet.</p>
+          <p className="text-center text-gray-600 dark:text-gray-400 py-12">No projects in this category yet.</p>
         )}
-        <div className="pointer-events-none sticky bottom-0 h-8 bg-gradient-to-t from-white dark:from-gray-900 to-transparent"></div>
+        <div className="pointer-events-none sticky bottom-0 h-8 bg-gradient-to-t from-teal-50 dark:from-ink to-transparent"></div>
       </div>
     </>
   )

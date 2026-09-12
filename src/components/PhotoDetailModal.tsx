@@ -23,7 +23,7 @@ export default function PhotoDetailModal({ photo, onClose }: Props) {
       onClick={onClose}
     >
       <div
-        className="max-w-3xl w-full bg-white dark:bg-gray-800 rounded-2xl shadow-2xl"
+        className="max-w-3xl w-full bg-white dark:bg-ink-panel rounded-2xl shadow-2xl"
         onClick={(e) => e.stopPropagation()}
       >
         <img
@@ -32,9 +32,9 @@ export default function PhotoDetailModal({ photo, onClose }: Props) {
           className="w-full max-h-[calc(100vh-10rem)] object-cover rounded-t-2xl"
         />
         <div className="p-4 space-y-1">
-          <p className="text-sm text-gray-500 dark:text-gray-400">{photo.timestamp}</p>
-          <p className="text-sm text-gray-500 dark:text-gray-400">{photo.location}</p>
-          {photo.comment && <p className="text-gray-700 dark:text-gray-300">{photo.comment}</p>}
+          <p className="text-sm text-gray-600 dark:text-gray-400">{photo.timestamp}</p>
+          <p className="text-sm text-gray-600 dark:text-gray-400">{photo.location}</p>
+          {photo.comment && <p className="text-gray-700 dark:text-gray-200">{photo.comment}</p>}
         </div>
       </div>
     </div>
