@@ -107,11 +107,11 @@ export default function Character3D({ className }: { className?: string }) {
         }
       )
 
-      const clock = new THREE.Clock()
+      const timer = new THREE.Timer()
 
       function animate() {
         animationId = requestAnimationFrame(animate)
-        const t = clock.getElapsedTime()
+        const t = timer.getElapsed()
         const wave = Math.sin(t * 4) * 0.45 + 0.25
         if (modelState.arm) {
           modelState.arm.rotation[modelState.armAxis] = modelState.armBase + wave
