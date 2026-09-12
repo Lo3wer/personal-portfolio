@@ -1,5 +1,5 @@
-import Image from "next/image";
 import PhotoMap from '@/components/PhotoMap';
+import Character3D from '@/components/Character3D';
 import { galleryData } from '@/lib/galleryData';
 import { staticGalleryData } from '@/lib/staticGalleryData';
 import { experienceItems } from '@/lib/experienceData';
@@ -30,13 +30,7 @@ export default async function Home() {
             <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">About Me</h2>
             <div className="flex flex-col md:flex-row items-center mb-12">
               <div className="relative w-48 h-64 mb-6 md:mb-0 md:mr-8 flex-shrink-0">
-                <Image
-                  src="/images/personal.jpeg"
-                  alt="Leo Zhang"
-                  fill
-                  sizes="12rem"
-                  className="rounded-full object-cover"
-                />
+                <Character3D className="w-full h-full" />
               </div>
               <div className="flex-1">
                 <p className="text-lg text-gray-700 dark:text-gray-300">
