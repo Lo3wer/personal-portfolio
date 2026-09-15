@@ -20,6 +20,7 @@ export default function Navbar() {
   useEffect(() => {
     const handleScroll = () => {
       const scrollY = window.scrollY
+      const windowHeight = window.innerHeight
       setIsScrolled(scrollY > 20)
 
       // 1. If at top of the page, highlight Home
@@ -28,18 +29,17 @@ export default function Navbar() {
         return
       }
 
-      // 2. Check if Contact section is visible or user has reached near bottom of page
+      // 2. Check if at or near page bottom, or if Contact section is visible on screen
       const contactEl = document.getElementById('contact')
-      const windowHeight = window.innerHeight
       const docHeight = Math.max(
         document.documentElement.scrollHeight,
         document.body.scrollHeight,
         document.documentElement.offsetHeight
       )
 
-      const isNearBottom = scrollY + windowHeight >= docHeight - 200
+      const isNearBottom = scrollY + windowHeight >= docHeight - 300
       const isContactInView = contactEl
-        ? contactEl.getBoundingClientRect().top <= windowHeight * 0.65
+        ? contactEl.getBoundingClientRect().top < windowHeight * 0.85
         : false
 
       if (isNearBottom || isContactInView) {
@@ -47,17 +47,19 @@ export default function Navbar() {
         return
       }
 
-      // 3. Determine active section based on scroll position for other sections
+      // 3. For all other sections, check which section is currently in view
       const sectionIds = ['photos', 'projects', 'about']
-      const scrollPosition = scrollY + 200
-
       for (const id of sectionIds) {
         const el = document.getElementById(id)
-        if (el && el.offsetTop <= scrollPosition) {
-          setActiveSection(`#${id}`)
-          return
+        if (el) {
+          const rect = el.getBoundingClientRect()
+          if (rect.top <= windowHeight * 0.45 && rect.bottom > 0) {
+            setActiveSection(`#${id}`)
+            return
+          }
         }
       }
+
       setActiveSection('#home')
     }
 

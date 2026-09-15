@@ -146,7 +146,10 @@ export default async function Home() {
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-24 bg-teal-50/60 dark:bg-ink transition-colors">
+        <section
+          id="contact"
+          className="py-28 min-h-[45vh] flex flex-col justify-center bg-teal-50/60 dark:bg-ink transition-colors"
+        >
           <div className="max-w-4xl mx-auto px-4 text-center">
             <ScrollReveal animation="fade-up">
               <h2 className="text-4xl font-bold mb-8 text-gray-900 dark:text-white">
