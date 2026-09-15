@@ -20,7 +20,7 @@ export default function PortfolioItem({
   category,
 }: PortfolioItemProps) {
   return (
-    <div className="group bg-white dark:bg-ink-panel rounded-xl shadow-sm hover:shadow-xl border border-gray-200/70 dark:border-ink-border transition-all duration-300 hover:-translate-y-1.5 flex flex-col h-full overflow-hidden">
+    <div className="group bg-white dark:bg-ink-panel rounded-xl shadow-md hover:shadow-xl transition-all duration-300 hover:-translate-y-1.5 flex flex-col h-full overflow-hidden">
       <Link
         href={link}
         target="_blank"
@@ -51,7 +51,7 @@ export default function PortfolioItem({
               {description}
             </p>
           </div>
-          <div className="flex items-center justify-between pt-2 border-t border-gray-100 dark:border-ink-border/50 text-xs">
+          <div className="flex items-center justify-between pt-2 text-xs">
             <span className="text-gray-500 dark:text-gray-400 font-medium">{date}</span>
             {category && (
               <span className="px-2.5 py-0.5 rounded-full bg-teal-50 dark:bg-ink-hover text-teal-700 dark:text-teal-300 font-medium">
