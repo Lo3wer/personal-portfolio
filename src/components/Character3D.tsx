@@ -24,6 +24,8 @@ export default function Character3D({
     let resizeObserver: ResizeObserver | null = null
     let themeObserver: MutationObserver | null = null
     let mixer: import('three').AnimationMixer | null = null
+    let hasUserInteracted = false
+    let onInteractionStart: (() => void) | null = null
 
     async function init() {
       const THREE = await import('three')
@@ -53,6 +55,11 @@ export default function Character3D({
       controls.enableDamping = true
       controls.minPolarAngle = Math.PI * 0.25
       controls.maxPolarAngle = Math.PI * 0.65
+
+      onInteractionStart = () => {
+        hasUserInteracted = true
+      }
+      controls.addEventListener('start', onInteractionStart)
 
       // Lighting
       scene.add(new THREE.AmbientLight(0xffffff, 1.2))
@@ -201,6 +208,11 @@ export default function Character3D({
           mixer.update(delta)
         }
 
+        // Slowly rotate initially, permanently stops once user interacts/moves it
+        if (!hasUserInteracted && modelState.mode === 'static') {
+          pivotGroup.rotation.y += delta * 0.5
+        }
+
         if (
           (modelState.mode === 'wave' || modelState.mode === 'placeholder') &&
           modelState.arm
@@ -233,6 +245,9 @@ export default function Character3D({
     return () => {
       cancelled = true
       cancelAnimationFrame(animationId)
+      if (controls && onInteractionStart) {
+        controls.removeEventListener('start', onInteractionStart)
+      }
       controls?.dispose()
       resizeObserver?.disconnect()
       themeObserver?.disconnect()

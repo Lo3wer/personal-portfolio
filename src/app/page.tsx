@@ -61,13 +61,8 @@ export default async function Home() {
             <ScrollReveal animation="fade-up">
               <h2 className="text-3xl font-bold mb-10 text-gray-900 dark:text-white">About Me</h2>
               <div className="flex flex-col md:flex-row items-center mb-16 gap-8">
-                <div className="flex flex-col items-center flex-shrink-0">
-                  <div className="relative w-52 h-64 mb-3">
-                    <Character3D className="w-full h-full" />
-                  </div>
-                  <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-ink px-3 py-1 rounded-full border border-gray-200/60 dark:border-ink-border">
-                    Drag to rotate
-                  </span>
+                <div className="relative w-52 h-64 mb-6 md:mb-0 flex-shrink-0">
+                  <Character3D className="w-full h-full" />
                 </div>
                 <div className="flex-1 text-lg text-gray-700 dark:text-gray-200 leading-relaxed">
                   <p>
