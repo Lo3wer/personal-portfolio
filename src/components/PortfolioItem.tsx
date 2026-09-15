@@ -39,11 +39,11 @@ export default function PortfolioItem({
         <div className="p-6 flex flex-col flex-grow justify-between">
           <div>
             <div className="flex items-start justify-between gap-2 mb-2">
-              <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-colors">
+              <h3 className="text-xl font-bold text-gray-900 dark:text-white group-hover:text-teal-600 dark:group-hover:text-teal-200/90 transition-colors">
                 {title}
               </h3>
               <FaExternalLinkAlt
-                className="w-3.5 h-3.5 mt-1 text-gray-400 dark:text-gray-500 group-hover:text-teal-600 dark:group-hover:text-teal-300 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0"
+                className="w-3.5 h-3.5 mt-1 text-gray-400 dark:text-gray-500 group-hover:text-teal-600 dark:group-hover:text-teal-200/90 transition-all group-hover:translate-x-0.5 group-hover:-translate-y-0.5 flex-shrink-0"
                 aria-hidden="true"
               />
             </div>
@@ -54,7 +54,7 @@ export default function PortfolioItem({
           <div className="flex items-center justify-between pt-2 text-xs">
             <span className="text-gray-500 dark:text-gray-400 font-medium">{date}</span>
             {category && (
-              <span className="px-2.5 py-0.5 rounded-full bg-teal-50 dark:bg-ink-hover text-teal-700 dark:text-teal-300 font-medium">
+              <span className="px-2.5 py-0.5 rounded-full bg-teal-50 dark:bg-ink-hover text-teal-700 dark:text-teal-200/80 font-medium">
                 {category}
               </span>
             )}

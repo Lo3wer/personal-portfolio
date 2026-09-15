@@ -100,11 +100,11 @@ export default async function Home() {
                           <h4 className="text-xl font-bold text-gray-900 dark:text-white">
                             {item.company}
                           </h4>
-                          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-50 dark:bg-ink text-teal-700 dark:text-teal-300 w-fit">
+                          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-50 dark:bg-ink text-teal-700 dark:text-teal-200/90 w-fit">
                             {item.duration}
                           </span>
                         </div>
-                        <h5 className="text-base font-medium text-teal-700 dark:text-teal-300">
+                        <h5 className="text-base font-medium text-teal-700 dark:text-gray-300">
                           {item.position}
                         </h5>
                         <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 text-sm sm:text-base">
@@ -148,15 +148,15 @@ export default async function Home() {
         {/* Contact Section */}
         <section
           id="contact"
-          className="py-28 min-h-[45vh] flex flex-col justify-center bg-teal-50/60 dark:bg-ink transition-colors"
+          className="py-10 bg-teal-50/60 dark:bg-ink transition-colors"
         >
           <div className="max-w-4xl mx-auto px-4 text-center">
             <ScrollReveal animation="fade-up">
-              <h2 className="text-4xl font-bold mb-8 text-gray-900 dark:text-white">
+              <h2 className="text-2xl sm:text-3xl font-bold mb-4 text-gray-900 dark:text-white">
                 If you wanna say hi!
               </h2>
             </ScrollReveal>
-            <ScrollReveal animation="fade-up" delay={150}>
+            <ScrollReveal animation="fade-up" delay={100}>
               <SocialIcons />
             </ScrollReveal>
           </div>
