@@ -2,7 +2,17 @@
 
 import { useEffect, useRef } from 'react'
 
-export default function Character3D({ className }: { className?: string }) {
+export interface Character3DProps {
+  className?: string
+  modelUrl?: string
+  autoRotateSpeed?: number
+}
+
+export default function Character3D({
+  className,
+  modelUrl = '/models/dinosaur.glb',
+  autoRotateSpeed = 1.2,
+}: Character3DProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
   useEffect(() => {
@@ -12,8 +22,11 @@ export default function Character3D({ className }: { className?: string }) {
     let cancelled = false
     let animationId = 0
     let renderer: import('three').WebGLRenderer | null = null
+    let controls: import('three/addons/controls/OrbitControls.js').OrbitControls | null = null
     let resizeObserver: ResizeObserver | null = null
     let themeObserver: MutationObserver | null = null
+    let mixer: import('three').AnimationMixer | null = null
+    let isUserInteracting = false
 
     async function init() {
       const THREE = await import('three')
@@ -36,7 +49,7 @@ export default function Character3D({ className }: { className?: string }) {
       renderer.domElement.style.height = '100%'
       renderer.domElement.style.touchAction = 'pan-y'
 
-      const controls = new OrbitControls(camera, renderer.domElement)
+      controls = new OrbitControls(camera, renderer.domElement)
       controls.target.set(0, 1.5, 0)
       controls.enableZoom = false
       controls.enablePan = false
@@ -44,6 +57,16 @@ export default function Character3D({ className }: { className?: string }) {
       controls.minPolarAngle = Math.PI * 0.25
       controls.maxPolarAngle = Math.PI * 0.65
 
+      const onInteractionStart = () => {
+        isUserInteracting = true
+      }
+      const onInteractionEnd = () => {
+        isUserInteracting = false
+      }
+      controls.addEventListener('start', onInteractionStart)
+      controls.addEventListener('end', onInteractionEnd)
+
+      // Lighting
       scene.add(new THREE.AmbientLight(0xffffff, 1.2))
       const key = new THREE.DirectionalLight(0xffffff, 2.2)
       key.position.set(4, 6, 4)
@@ -61,72 +84,152 @@ export default function Character3D({ className }: { className?: string }) {
       bounce.position.set(0, -2, 3)
       scene.add(bounce)
 
+      // Initial placeholder (waves until model is loaded or on load failure)
       const placeholder = buildPlaceholder(THREE)
       scene.add(placeholder.group)
 
+      const pivotGroup = new THREE.Group()
+      scene.add(pivotGroup)
+
       const modelState = {
-        arm: null as import('three').Object3D | null,
-        armAxis: 'x' as 'x' | 'z',
-        armBase: 0,
-        gltf: null as import('three').Object3D | null,
-        loaded: false,
+        mode: 'placeholder' as 'placeholder' | 'clip' | 'wave' | 'spin',
+        arm: placeholder.leftArm as import('three').Object3D | null,
+        armAxis: placeholder.armAxis as 'x' | 'z',
+        armBase: placeholder.armBase,
+        pivotGroup,
       }
 
-      const loader = new GLTFLoader()
-      loader.load(
+      // Candidate models to try in sequence
+      const candidateUrls = [
+        modelUrl,
+        '/models/dinosaur.glb',
         '/models/character.glb',
-        (gltf) => {
-          if (cancelled) return
-          const model = gltf.scene
-          const box = new THREE.Box3().setFromObject(model)
-          const size = box.getSize(new THREE.Vector3())
-          const maxDim = Math.max(size.x, size.y, size.z) || 1
-          const targetHeight = 3.6
-          const scale = targetHeight / maxDim
-          model.scale.setScalar(scale)
-          box.setFromObject(model)
-          const center = box.getCenter(new THREE.Vector3())
-          model.position.sub(center)
-          model.position.y += box.getSize(new THREE.Vector3()).y / 2
-          scene.remove(placeholder.group)
-          placeholder.dispose()
-          scene.add(model)
-          modelState.gltf = model
-          modelState.loaded = true
+      ].filter((url, idx, self) => Boolean(url) && self.indexOf(url) === idx)
 
-          const armNames = ['LeftArm', 'mixamorigLeftArm', 'Arm.L', 'upperarm.L', 'UpperArm_L']
-          let armResult: import('three').Object3D | null = null
-          model.traverse((o) => {
-            if (!armResult && armNames.includes(o.name)) armResult = o
-          })
-          const arm = armResult as import('three').Object3D | null
-          if (arm) {
-            modelState.arm = arm
-            modelState.armAxis = arm.name.includes('mixamorig') ? 'z' : 'x'
-            modelState.armBase = arm.rotation[modelState.armAxis]
-          }
-        },
-        undefined,
-        () => {
-          modelState.arm = placeholder.leftArm
-          modelState.armAxis = placeholder.armAxis
-          modelState.armBase = placeholder.armBase
+      const loader = new GLTFLoader()
+
+      function tryLoadModel(urlIndex: number) {
+        if (urlIndex >= candidateUrls.length) {
+          // All candidates failed, stay with waving placeholder
+          return
         }
-      )
+
+        const currentUrl = candidateUrls[urlIndex]
+        loader.load(
+          currentUrl,
+          (gltf) => {
+            if (cancelled) return
+
+            // Remove and dispose initial placeholder
+            scene.remove(placeholder.group)
+            placeholder.dispose()
+
+            const model = gltf.scene
+
+            // Center & normalize scale inside pivotGroup
+            const box = new THREE.Box3().setFromObject(model)
+            const size = box.getSize(new THREE.Vector3())
+            const maxDim = Math.max(size.x, size.y, size.z) || 1
+            const targetHeight = 3.4
+            const scale = targetHeight / maxDim
+            model.scale.setScalar(scale)
+
+            // Recompute bounding box after scale and shift model to center at (0, 0, 0)
+            box.setFromObject(model)
+            const center = box.getCenter(new THREE.Vector3())
+            model.position.sub(center)
+
+            pivotGroup.add(model)
+            pivotGroup.position.set(0, 1.5, 0)
+
+            // Tier 1: Check for embedded animation clips
+            if (gltf.animations && gltf.animations.length > 0) {
+              mixer = new THREE.AnimationMixer(model)
+              const waveClip =
+                gltf.animations.find((clip) =>
+                  /wave|hi|hello|greet|salute/i.test(clip.name)
+                ) || gltf.animations[0]
+              const action = mixer.clipAction(waveClip)
+              action.play()
+              modelState.mode = 'clip'
+              return
+            }
+
+            // Tier 2: Check for skeletal arm/hand bones to wave procedurally
+            let foundArm: import('three').Object3D | null = null
+            model.traverse((o) => {
+              if (foundArm) return
+              const name = o.name.toLowerCase()
+              if (
+                name.includes('leftarm') ||
+                name.includes('arm.l') ||
+                name.includes('upperarm.l') ||
+                name.includes('upper_arm.l') ||
+                name.includes('leftupperarm') ||
+                name.includes('mixamorig:leftarm') ||
+                name.includes('mixamorigleftarm') ||
+                name.includes('bip01 l upperarm')
+              ) {
+                foundArm = o
+              }
+            })
+
+            if (foundArm) {
+              const arm = foundArm as import('three').Object3D
+              modelState.arm = arm
+              modelState.armAxis = arm.name.toLowerCase().includes('mixamo') ? 'z' : 'x'
+              modelState.armBase = arm.rotation[modelState.armAxis]
+              modelState.mode = 'wave'
+              return
+            }
+
+            // Tier 3: Static mesh fallback -> turntable spin and gentle float
+            modelState.mode = 'spin'
+          },
+          undefined,
+          () => {
+            // Try next candidate model
+            tryLoadModel(urlIndex + 1)
+          }
+        )
+      }
+
+      tryLoadModel(0)
 
       const timer = new THREE.Timer()
 
-      function animate() {
+      function animate(timestamp?: number) {
         animationId = requestAnimationFrame(animate)
-        const t = timer.getElapsed()
-        const wave = Math.sin(t * 4) * 0.45 + 0.25
-        if (modelState.arm) {
-          modelState.arm.rotation[modelState.armAxis] = modelState.armBase + wave
-        } else if (modelState.gltf) {
-          modelState.gltf.position.y += Math.sin(t * 3) * 0.01
+        if (timestamp !== undefined) {
+          timer.update(timestamp)
+        } else {
+          timer.update()
         }
-        controls.update()
-        renderer!.render(scene, camera)
+
+        const delta = timer.getDelta()
+        const t = timer.getElapsed()
+
+        if (mixer) {
+          mixer.update(delta)
+        }
+
+        if (modelState.mode === 'spin') {
+          // Turntable spin when user is not actively dragging
+          if (!isUserInteracting) {
+            pivotGroup.rotation.y += delta * autoRotateSpeed
+          }
+          // Gentle floating bob
+          pivotGroup.position.y = 1.5 + Math.sin(t * 2) * 0.04
+        } else if (
+          (modelState.mode === 'wave' || modelState.mode === 'placeholder') &&
+          modelState.arm
+        ) {
+          const wave = Math.sin(t * 4) * 0.45 + 0.25
+          modelState.arm.rotation[modelState.armAxis] = modelState.armBase + wave
+        }
+
+        controls?.update()
+        renderer?.render(scene, camera)
       }
       animate()
 
@@ -149,21 +252,23 @@ export default function Character3D({ className }: { className?: string }) {
     return () => {
       cancelled = true
       cancelAnimationFrame(animationId)
+      controls?.dispose()
       resizeObserver?.disconnect()
       themeObserver?.disconnect()
+      mixer?.stopAllAction()
       renderer?.dispose()
       if (renderer && renderer.domElement.parentNode === container) {
         container.removeChild(renderer.domElement)
       }
     }
-  }, [])
+  }, [modelUrl, autoRotateSpeed])
 
   return (
     <div
       ref={containerRef}
       className={className}
       role="img"
-      aria-label="3D character waving"
+      aria-label="3D model showcase"
       style={{ cursor: 'grab' }}
     />
   )
