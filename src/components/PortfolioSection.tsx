@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import PortfolioItem from './PortfolioItem'
+import ScrollReveal from './ScrollReveal'
 import { portfolioItems, ProjectCategory } from '@/lib/portfolioData'
 
 const ALL = null as ProjectCategory | null
@@ -58,15 +59,20 @@ export default function PortfolioSection() {
       {/* Projects Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
         {visibleItems.map((item, index) => (
-          <PortfolioItem
+          <ScrollReveal
             key={`${item.title}-${index}`}
-            title={item.title}
-            description={item.description}
-            imageUrl={item.imageUrl}
-            link={item.link}
-            date={item.date}
-            category={item.category}
-          />
+            animation="fade-up"
+            delay={Math.min(index * 75, 450)}
+          >
+            <PortfolioItem
+              title={item.title}
+              description={item.description}
+              imageUrl={item.imageUrl}
+              link={item.link}
+              date={item.date}
+              category={item.category}
+            />
+          </ScrollReveal>
         ))}
       </div>
 

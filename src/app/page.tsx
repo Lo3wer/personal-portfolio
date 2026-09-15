@@ -6,6 +6,7 @@ import { experienceItems } from '@/lib/experienceData';
 import SocialIcons from '@/components/SocialIcons';
 import Navbar from '@/components/Navbar';
 import PortfolioSection from '@/components/PortfolioSection';
+import ScrollReveal from '@/components/ScrollReveal';
 
 export default async function Home() {
   return (
@@ -15,50 +16,107 @@ export default async function Home() {
       {/* Main Content */}
       <main className="pt-16">
         {/* Hero Section */}
-        <section id="home" className="min-h-screen flex items-center justify-center relative bg-[url('/images/background.JPG')] bg-cover bg-center bg-no-repeat">
+        <section
+          id="home"
+          className="min-h-screen flex items-center justify-center relative bg-[url('/images/background.JPG')] bg-cover bg-center bg-no-repeat"
+        >
           <div className="absolute inset-0 bg-black/60"></div>
-          <div className="text-center relative z-10">
-            <h1 className="text-5xl font-bold mb-4 text-white">Leo Zhang</h1>
-            <p className="text-xl text-gray-100">Welcome to my website!</p>
-            <SocialIcons light />
+          <div className="text-center relative z-10 px-4">
+            <ScrollReveal animation="fade-up" duration={700}>
+              <h1 className="text-5xl md:text-6xl font-bold mb-4 text-white tracking-tight">
+                Leo Zhang
+              </h1>
+              <p className="text-xl md:text-2xl text-gray-100 font-light mb-6">
+                Welcome to my website!
+              </p>
+              <SocialIcons light />
+            </ScrollReveal>
           </div>
+
+          {/* Subtle Scroll Down Chevron */}
+          <a
+            href="#about"
+            aria-label="Scroll down to About section"
+            className="absolute bottom-8 left-1/2 -translate-x-1/2 z-10 text-white/70 hover:text-white transition-colors animate-bounce p-2"
+          >
+            <svg
+              className="w-6 h-6"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                strokeWidth={2}
+                d="M19 14l-7 7m0 0l-7-7m7 7V3"
+              />
+            </svg>
+          </a>
         </section>
 
         {/* About & Experience Section */}
-        <section id="about" className="py-20 bg-white dark:bg-ink-panel">
+        <section id="about" className="py-24 bg-white dark:bg-ink-panel transition-colors">
           <div className="max-w-4xl mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">About Me</h2>
-            <div className="flex flex-col md:flex-row items-center mb-12">
-              <div className="relative w-48 h-64 mb-6 md:mb-0 md:mr-8 flex-shrink-0">
-                <Character3D className="w-full h-full" />
+            <ScrollReveal animation="fade-up">
+              <h2 className="text-3xl font-bold mb-10 text-gray-900 dark:text-white">About Me</h2>
+              <div className="flex flex-col md:flex-row items-center mb-16 gap-8">
+                <div className="flex flex-col items-center flex-shrink-0">
+                  <div className="relative w-52 h-64 mb-3">
+                    <Character3D className="w-full h-full" />
+                  </div>
+                  <span className="text-xs text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-ink px-3 py-1 rounded-full border border-gray-200/60 dark:border-ink-border">
+                    Drag to rotate
+                  </span>
+                </div>
+                <div className="flex-1 text-lg text-gray-700 dark:text-gray-200 leading-relaxed">
+                  <p>
+                    I&apos;m Leo, a computer engineering student at the University of British Columbia! I love exploring how things work, especially computers. Some of my favourite projects were the lox interpreters and graphics renderer.
+                  </p>
+                </div>
               </div>
-              <div className="flex-1">
-                <p className="text-lg text-gray-700 dark:text-gray-200">
-                  I&apos;m Leo, a computer engineering student at the University of British Columbia! I love exploring how things work, especially computers. Some of my favourite projects were the lox interpreters and graphics renderer.
-                </p>
-              </div>
-            </div>
+            </ScrollReveal>
 
             {/* Experience Timeline */}
             <div>
-              <h3 className="text-2xl font-bold mb-6 text-gray-900 dark:text-white">Experience</h3>
-              <div className="space-y-8">
+              <ScrollReveal animation="fade-up">
+                <h3 className="text-2xl font-bold mb-8 text-gray-900 dark:text-white">
+                  Experience
+                </h3>
+              </ScrollReveal>
+              <div className="relative pl-6 sm:pl-8 border-l-2 border-teal-200 dark:border-ink-border space-y-10">
                 {experienceItems.map((item, index) => (
-                  <div key={index} className="border-l-4 border-teal-300 dark:border-ink-border pl-4 space-y-2">
-                    <div className="flex flex-col md:flex-row md:justify-between md:items-start">
-                      <h3 className="text-xl font-bold text-gray-900 dark:text-white">{item.company}</h3>
-                      <span className="text-sm text-gray-600 dark:text-gray-400">{item.duration}</span>
+                  <ScrollReveal
+                    key={`${item.company}-${index}`}
+                    animation="fade-up"
+                    delay={Math.min(index * 100, 300)}
+                  >
+                    <div className="relative">
+                      {/* Timeline Marker Dot */}
+                      <div className="absolute -left-[31px] sm:-left-[39px] top-1.5 w-3.5 h-3.5 rounded-full bg-teal-500 ring-4 ring-white dark:ring-ink-panel" />
+
+                      <div className="space-y-2">
+                        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-start gap-1">
+                          <h4 className="text-xl font-bold text-gray-900 dark:text-white">
+                            {item.company}
+                          </h4>
+                          <span className="text-xs font-semibold px-2.5 py-1 rounded-full bg-teal-50 dark:bg-ink text-teal-700 dark:text-teal-300 w-fit">
+                            {item.duration}
+                          </span>
+                        </div>
+                        <h5 className="text-base font-medium text-teal-700 dark:text-teal-300">
+                          {item.position}
+                        </h5>
+                        <ul className="list-disc list-inside text-gray-600 dark:text-gray-300 space-y-1 text-sm sm:text-base">
+                          {item.achievements.map((achievement, idx) => (
+                            <li key={idx} className="leading-relaxed">
+                              <span>{achievement}</span>
+                            </li>
+                          ))}
+                        </ul>
+                      </div>
                     </div>
-                    <h4 className="text-lg text-gray-600 dark:text-gray-300">{item.position}</h4>
-                    <ul className="list-disc list-inside text-gray-600 dark:text-gray-300">
-                      {item.achievements.map((achievement, idx) => (
-                        <li key={idx} className="flex items-start">
-                          <span className="mr-2">•</span>
-                          <span className="flex-grow text-left">{achievement}</span>
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
+                  </ScrollReveal>
                 ))}
               </div>
             </div>
@@ -66,26 +124,38 @@ export default async function Home() {
         </section>
 
         {/* Projects Section */}
-        <section id="projects" className="py-20 bg-teal-50 dark:bg-ink">
+        <section id="projects" className="py-24 bg-teal-50/60 dark:bg-ink transition-colors">
           <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Projects</h2>
+            <ScrollReveal animation="fade-up">
+              <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Projects</h2>
+            </ScrollReveal>
             <PortfolioSection />
           </div>
         </section>
 
         {/* Photos Section */}
-        <section id="photos" className="py-20 bg-white dark:bg-ink-panel">
+        <section id="photos" className="py-24 bg-white dark:bg-ink-panel transition-colors">
           <div className="max-w-6xl mx-auto px-4">
-            <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Gallery</h2>
-            <PhotoMap photos={[...galleryData, ...staticGalleryData]} />
+            <ScrollReveal animation="fade-up">
+              <h2 className="text-3xl font-bold mb-8 text-gray-900 dark:text-white">Gallery</h2>
+            </ScrollReveal>
+            <ScrollReveal animation="fade-up" delay={150}>
+              <PhotoMap photos={[...galleryData, ...staticGalleryData]} />
+            </ScrollReveal>
           </div>
         </section>
 
         {/* Contact Section */}
-        <section id="contact" className="py-20 bg-teal-50 dark:bg-ink">
-          <div className="max-w-4xl mx-auto px-4">
-            <h2 className="text-4xl font-bold mb-8 text-gray-900 dark:text-white text-center">If you wanna say hi!</h2>
-            <SocialIcons />
+        <section id="contact" className="py-24 bg-teal-50/60 dark:bg-ink transition-colors">
+          <div className="max-w-4xl mx-auto px-4 text-center">
+            <ScrollReveal animation="fade-up">
+              <h2 className="text-4xl font-bold mb-8 text-gray-900 dark:text-white">
+                If you wanna say hi!
+              </h2>
+            </ScrollReveal>
+            <ScrollReveal animation="fade-up" delay={150}>
+              <SocialIcons />
+            </ScrollReveal>
           </div>
         </section>
       </main>
