@@ -19,11 +19,26 @@ export default function Navbar() {
 
   useEffect(() => {
     const handleScroll = () => {
-      setIsScrolled(window.scrollY > 20)
+      const scrollY = window.scrollY
+      setIsScrolled(scrollY > 20)
+
+      // If at or near bottom of the page, highlight Contact
+      const scrollHeight = document.documentElement.scrollHeight
+      const clientHeight = window.innerHeight
+      if (scrollY + clientHeight >= scrollHeight - 60) {
+        setActiveSection('#contact')
+        return
+      }
+
+      // If at top of the page, highlight Home
+      if (scrollY < 80) {
+        setActiveSection('#home')
+        return
+      }
 
       // Determine active section based on scroll position
       const sectionIds = links.map(l => l.href.substring(1))
-      const scrollPosition = window.scrollY + 160
+      const scrollPosition = scrollY + 160
 
       for (let i = sectionIds.length - 1; i >= 0; i--) {
         const el = document.getElementById(sectionIds[i])
@@ -47,8 +62,8 @@ export default function Navbar() {
     <header
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
         isScrolled
-          ? 'bg-teal-50/90 dark:bg-ink/90 backdrop-blur-md border-b border-gray-200/60 dark:border-ink-border/70 shadow-sm'
-          : 'bg-teal-50/70 dark:bg-ink/70 backdrop-blur-sm'
+          ? 'bg-teal-50/90 dark:bg-ink/90 backdrop-blur-md'
+          : 'bg-teal-50/80 dark:bg-ink/80 backdrop-blur-sm'
       }`}
     >
       <nav className="max-w-6xl mx-auto px-4 py-3.5">
