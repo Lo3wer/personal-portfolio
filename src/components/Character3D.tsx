@@ -5,13 +5,11 @@ import { useEffect, useRef } from 'react'
 export interface Character3DProps {
   className?: string
   modelUrl?: string
-  autoRotateSpeed?: number
 }
 
 export default function Character3D({
   className,
   modelUrl = '/models/dinosaur.glb',
-  autoRotateSpeed = 1.2,
 }: Character3DProps) {
   const containerRef = useRef<HTMLDivElement>(null)
 
@@ -26,7 +24,6 @@ export default function Character3D({
     let resizeObserver: ResizeObserver | null = null
     let themeObserver: MutationObserver | null = null
     let mixer: import('three').AnimationMixer | null = null
-    let isUserInteracting = false
 
     async function init() {
       const THREE = await import('three')
@@ -57,15 +54,6 @@ export default function Character3D({
       controls.minPolarAngle = Math.PI * 0.25
       controls.maxPolarAngle = Math.PI * 0.65
 
-      const onInteractionStart = () => {
-        isUserInteracting = true
-      }
-      const onInteractionEnd = () => {
-        isUserInteracting = false
-      }
-      controls.addEventListener('start', onInteractionStart)
-      controls.addEventListener('end', onInteractionEnd)
-
       // Lighting
       scene.add(new THREE.AmbientLight(0xffffff, 1.2))
       const key = new THREE.DirectionalLight(0xffffff, 2.2)
@@ -92,7 +80,7 @@ export default function Character3D({
       scene.add(pivotGroup)
 
       const modelState = {
-        mode: 'placeholder' as 'placeholder' | 'clip' | 'wave' | 'spin',
+        mode: 'placeholder' as 'placeholder' | 'clip' | 'wave' | 'static',
         arm: placeholder.leftArm as import('three').Object3D | null,
         armAxis: placeholder.armAxis as 'x' | 'z',
         armBase: placeholder.armBase,
@@ -183,8 +171,8 @@ export default function Character3D({
               return
             }
 
-            // Tier 3: Static mesh fallback -> turntable spin and gentle float
-            modelState.mode = 'spin'
+            // Tier 3: Static mesh fallback
+            modelState.mode = 'static'
           },
           undefined,
           () => {
@@ -213,14 +201,7 @@ export default function Character3D({
           mixer.update(delta)
         }
 
-        if (modelState.mode === 'spin') {
-          // Turntable spin when user is not actively dragging
-          if (!isUserInteracting) {
-            pivotGroup.rotation.y += delta * autoRotateSpeed
-          }
-          // Gentle floating bob
-          pivotGroup.position.y = 1.5 + Math.sin(t * 2) * 0.04
-        } else if (
+        if (
           (modelState.mode === 'wave' || modelState.mode === 'placeholder') &&
           modelState.arm
         ) {
@@ -261,7 +242,7 @@ export default function Character3D({
         container.removeChild(renderer.domElement)
       }
     }
-  }, [modelUrl, autoRotateSpeed])
+  }, [modelUrl])
 
   return (
     <div
